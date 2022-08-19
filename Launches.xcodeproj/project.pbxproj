@@ -11,6 +11,7 @@
 		6E8ED0CF28B0101B00C734D4 /* Launches.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8ED0C428B0101B00C734D4 /* Launches.framework */; };
 		6E8ED0D428B0101B00C734D4 /* LaunchesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */; };
 		6E8ED0D528B0101B00C734D4 /* Launches.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E8ED0C728B0101B00C734D4 /* Launches.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6E8ED0DF28B0105C00C734D4 /* LaunchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0DE28B0105C00C734D4 /* LaunchItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		6E8ED0C828B0101B00C734D4 /* Launches.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Launches.docc; sourceTree = "<group>"; };
 		6E8ED0CE28B0101B00C734D4 /* LaunchesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LaunchesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchesTests.swift; sourceTree = "<group>"; };
+		6E8ED0DE28B0105C00C734D4 /* LaunchItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 			children = (
 				6E8ED0C728B0101B00C734D4 /* Launches.h */,
 				6E8ED0C828B0101B00C734D4 /* Launches.docc */,
+				6E8ED0DE28B0105C00C734D4 /* LaunchItem.swift */,
 			);
 			path = Launches;
 			sourceTree = "<group>";
@@ -195,6 +198,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E8ED0C928B0101B00C734D4 /* Launches.docc in Sources */,
+				6E8ED0DF28B0105C00C734D4 /* LaunchItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,6 +399,7 @@
 		6E8ED0DC28B0101B00C734D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 89Y44TXV22;
@@ -410,6 +415,7 @@
 		6E8ED0DD28B0101B00C734D4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 89Y44TXV22;
