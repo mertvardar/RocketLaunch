@@ -77,8 +77,7 @@
 			children = (
 				6E8ED0C728B0101B00C734D4 /* Launches.h */,
 				6E8ED0C828B0101B00C734D4 /* Launches.docc */,
-				6E8ED0DE28B0105C00C734D4 /* LaunchItem.swift */,
-				6E8ED0E028B0113200C734D4 /* LaunchLoader.swift */,
+				6E8ED0E228B011C500C734D4 /* LaunchFeature */,
 			);
 			path = Launches;
 			sourceTree = "<group>";
@@ -89,6 +88,15 @@
 				6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */,
 			);
 			path = LaunchesTests;
+			sourceTree = "<group>";
+		};
+		6E8ED0E228B011C500C734D4 /* LaunchFeature */ = {
+			isa = PBXGroup;
+			children = (
+				6E8ED0DE28B0105C00C734D4 /* LaunchItem.swift */,
+				6E8ED0E028B0113200C734D4 /* LaunchLoader.swift */,
+			);
+			path = LaunchFeature;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
