@@ -8,7 +8,21 @@
 import Foundation
 
 public struct LaunchItem: Equatable {
-    let id: Int
-    let name: String
-    let date: String
+    public let id: Int
+    public let name: String
+    public let date: String
+
+    public init(id: Int, name: String, date: String) {
+        self.id = id
+        self.name = name
+        self.date = date
+    }
+}
+
+extension LaunchItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case date = "date_str"
+    }
 }

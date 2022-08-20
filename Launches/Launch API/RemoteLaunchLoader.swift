@@ -30,8 +30,8 @@ public final class RemoteLaunchLoader {
         client.get(from: url) { result in
             switch result {
             case let .success(data, _):
-                if let _ = try? JSONSerialization.jsonObject(with: data) {
-                    completion(.success([]))
+                if let root = try? JSONDecoder().decode(Root.self, from: data) {
+                    completion(.success(root.result))
                 } else {
                     completion(.failure(.invalidData))
                 }
@@ -40,4 +40,8 @@ public final class RemoteLaunchLoader {
             }
         }
     }
+}
+
+private struct Root: Decodable {
+    let result: [LaunchItem]
 }

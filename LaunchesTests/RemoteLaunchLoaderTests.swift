@@ -59,7 +59,7 @@ class RemoteLaunchLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
 
         expect(sut, toCompleteWith: .failure(.invalidData)) {
-            let invalidJSON = Data("invalidJSON".utf8)
+            let invalidJSON = Data("invalidJSON2".utf8)
             client.complete(with: 200, data: invalidJSON)
         }
     }
@@ -70,6 +70,25 @@ class RemoteLaunchLoaderTests: XCTestCase {
         expect(sut, toCompleteWith: .success([])) {
             let emptyListJSON = Data("{\"result\": []}".utf8)
             client.complete(with: 200, data: emptyListJSON)
+        }
+    }
+
+    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+        let (sut, client) = makeSUT()
+
+        let item1 = LaunchItem(id: 1, name: "Item 1", date: "Aug 19")
+        let item1JSON = ["id": item1.id,
+                         "name": item1.name,
+                         "date_str": item1.date] as [String:Any]
+        let item2 = LaunchItem(id: 2, name: "Item 2", date: "Aug 20")
+        let item2JSON = ["id": item2.id,
+                         "name": item2.name,
+                         "date_str": item2.date] as [String:Any]
+        let resultJSON = ["result": [item1JSON, item2JSON]]
+
+        expect(sut, toCompleteWith: .success([item1, item2])) {
+            let json = try! JSONSerialization.data(withJSONObject: resultJSON)
+            client.complete(with: 200, data: json)
         }
     }
 
