@@ -12,8 +12,6 @@ public enum LoadLaunchResult<Error: Swift.Error> {
     case failure(Error)
 }
 
-extension LoadLaunchResult: Equatable where Error: Equatable {}
-
 protocol LaunchLoader {
     associatedtype Error: Swift.Error
 
