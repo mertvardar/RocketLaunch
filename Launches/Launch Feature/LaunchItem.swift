@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LaunchItem {
+public struct LaunchItem: Equatable {
     let id: Int
     let name: String
     let date: String
