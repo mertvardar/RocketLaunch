@@ -62,6 +62,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E1EE4CA28B10991005E5544 /* Launch API */ = {
+			isa = PBXGroup;
+			children = (
+				6E8ED0E328B0126E00C734D4 /* RemoteLaunchLoaderTests.swift */,
+			);
+			path = "Launch API";
+			sourceTree = "<group>";
+		};
 		6E8ED0BA28B0101B00C734D4 = {
 			isa = PBXGroup;
 			children = (
@@ -95,7 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */,
-				6E8ED0E328B0126E00C734D4 /* RemoteLaunchLoaderTests.swift */,
+				6E1EE4CA28B10991005E5544 /* Launch API */,
 			);
 			path = LaunchesTests;
 			sourceTree = "<group>";
