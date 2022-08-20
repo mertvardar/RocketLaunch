@@ -64,6 +64,18 @@ class RemoteLaunchLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+        let (sut, client) = makeSUT()
+
+        var capturedResults = [RemoteLaunchLoader.Result]()
+        sut.load { capturedResults.append($0) }
+
+        let emptyListJSON = Data("{\"result\": []}".utf8)
+        client.complete(with: 200, data: emptyListJSON)
+
+        XCTAssertEqual(capturedResults, [.success([])])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteLaunchLoader, client: HTTPCLientSpy) {
