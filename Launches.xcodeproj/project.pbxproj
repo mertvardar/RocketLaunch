@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6E1EE4C928B10263005E5544 /* LaunchItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1EE4C828B10263005E5544 /* LaunchItemsMapper.swift */; };
 		6E1EE4CC28B11B57005E5544 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1EE4CB28B11B57005E5544 /* URLSessionHTTPClientTests.swift */; };
+		6E1EE4CF28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1EE4CE28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift */; };
 		6E8ED0C928B0101B00C734D4 /* Launches.docc in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0C828B0101B00C734D4 /* Launches.docc */; };
 		6E8ED0CF28B0101B00C734D4 /* Launches.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8ED0C428B0101B00C734D4 /* Launches.framework */; };
 		6E8ED0D428B0101B00C734D4 /* LaunchesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */; };
@@ -33,6 +34,7 @@
 /* Begin PBXFileReference section */
 		6E1EE4C828B10263005E5544 /* LaunchItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchItemsMapper.swift; sourceTree = "<group>"; };
 		6E1EE4CB28B11B57005E5544 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
+		6E1EE4CE28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		6E8ED0C428B0101B00C734D4 /* Launches.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Launches.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E8ED0C728B0101B00C734D4 /* Launches.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Launches.h; sourceTree = "<group>"; };
 		6E8ED0C828B0101B00C734D4 /* Launches.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Launches.docc; sourceTree = "<group>"; };
@@ -73,6 +75,14 @@
 			path = "Launch API";
 			sourceTree = "<group>";
 		};
+		6E1EE4CD28B17F5D005E5544 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				6E1EE4CE28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		6E8ED0BA28B0101B00C734D4 = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +115,7 @@
 		6E8ED0D228B0101B00C734D4 /* LaunchesTests */ = {
 			isa = PBXGroup;
 			children = (
+				6E1EE4CD28B17F5D005E5544 /* Helpers */,
 				6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */,
 				6E1EE4CA28B10991005E5544 /* Launch API */,
 			);
@@ -254,6 +265,7 @@
 			files = (
 				6E8ED0D428B0101B00C734D4 /* LaunchesTests.swift in Sources */,
 				6E1EE4CC28B11B57005E5544 /* URLSessionHTTPClientTests.swift in Sources */,
+				6E1EE4CF28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift in Sources */,
 				6E8ED0E428B0126E00C734D4 /* RemoteLaunchLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
