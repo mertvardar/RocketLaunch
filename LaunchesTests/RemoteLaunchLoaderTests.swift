@@ -69,7 +69,7 @@ class RemoteLaunchLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
 
         expect(sut, toCompleteWith: .success([])) {
-            let emptyListJSON = Data("{\"result\": []}".utf8)
+            let emptyListJSON = makeResultJSONData([])
             client.complete(with: 200, data: emptyListJSON)
         }
     }
