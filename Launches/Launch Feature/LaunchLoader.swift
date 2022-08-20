@@ -12,6 +12,6 @@ public enum LoadLaunchResult {
     case failure(Error)
 }
 
-protocol LaunchLoader {
+public protocol LaunchLoader {
     func load(completion: @escaping (LoadLaunchResult) -> Void)
 }
