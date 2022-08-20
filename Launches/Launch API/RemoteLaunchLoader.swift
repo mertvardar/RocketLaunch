@@ -30,11 +30,13 @@ public final class RemoteLaunchLoader {
         client.get(from: url) { result in
             switch result {
             case let .success(data, response):
-                if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) {
-                    completion(.success(root.result.map { $0.result }))
-                } else {
+                do {
+                    let result = try LaunchItemsMapper.map(data, response)
+                    completion(.success(result))
+                } catch {
                     completion(.failure(.invalidData))
                 }
+
             case .failure:
                 completion(.failure(.connectivity))
             }
@@ -42,16 +44,26 @@ public final class RemoteLaunchLoader {
     }
 }
 
-private struct Root: Decodable {
-    let result: [Result]
-}
+private class LaunchItemsMapper {
+    private struct Root: Decodable {
+        let result: [Result]
+    }
 
-private struct Result: Decodable {
-    let id: Int
-    let name: String
-    let date_str: String
+    private struct Result: Decodable {
+        let id: Int
+        let name: String
+        let date_str: String
 
-    var result: LaunchItem {
-        return LaunchItem(id: id, name: name, date: date_str)
+        var result: LaunchItem {
+            return LaunchItem(id: id, name: name, date: date_str)
+        }
+    }
+
+    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [LaunchItem] {
+        guard response.statusCode == 200 else {
+            throw RemoteLaunchLoader.Error.invalidData
+        }
+        let root = try JSONDecoder().decode(Root.self, from: data)
+        return root.result.map { $0.result }
     }
 }
