@@ -38,7 +38,7 @@ class RemoteLaunchLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(RemoteLaunchLoader.Error.connectivity)) {
+        expect(sut, toCompleteWith: failure(.connectivity)) {
             let clientError = NSError(domain: "Test", code: 0)
             client.complete(with: clientError)
         }
@@ -49,7 +49,7 @@ class RemoteLaunchLoaderTests: XCTestCase {
         let samples = [199, 201, 300, 400, 500]
 
         samples.enumerated().forEach { index, code in
-            expect(sut, toCompleteWith: .failure(RemoteLaunchLoader.Error.invalidData)) {
+            expect(sut, toCompleteWith: failure(.invalidData)) {
                 let json = makeResultJSONData([])
                 client.complete(with: code, data: json, at: index)
             }
@@ -59,7 +59,7 @@ class RemoteLaunchLoaderTests: XCTestCase {
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(RemoteLaunchLoader.Error.invalidData)) {
+        expect(sut, toCompleteWith: failure(.invalidData)) {
             let invalidJSON = Data("invalidJSON2".utf8)
             client.complete(with: 200, data: invalidJSON)
         }
@@ -131,6 +131,10 @@ class RemoteLaunchLoaderTests: XCTestCase {
     private func makeResultJSONData(_ result: [[String: Any]]) -> Data {
         let json = ["result": result]
         return try! JSONSerialization.data(withJSONObject: json)
+    }
+
+    private func failure(_ error: RemoteLaunchLoader.Error) -> RemoteLaunchLoader.Result {
+        return .failure(error)
     }
 
     private func expect(_ sut: RemoteLaunchLoader,
