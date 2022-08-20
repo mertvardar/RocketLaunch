@@ -59,8 +59,12 @@ private class LaunchItemsMapper {
         }
     }
 
+    static var OK_200: Int {
+        return 200
+    }
+
     static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [LaunchItem] {
-        guard response.statusCode == 200 else {
+        guard response.statusCode == LaunchItemsMapper.OK_200 else {
             throw RemoteLaunchLoader.Error.invalidData
         }
         let root = try JSONDecoder().decode(Root.self, from: data)
