@@ -87,6 +87,19 @@ class RemoteLaunchLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        let url = URL(string: "https://any-url.com")!
+        let client = HTTPCLientSpy()
+        var sut: RemoteLaunchLoader? = RemoteLaunchLoader(url: url, client: client)
+        var capturedResults = [RemoteLaunchLoader.Result]()
+        sut?.load { capturedResults.append($0) }
+
+        sut = nil
+        client.complete(with: 200, data: makeResultJSONData([]))
+
+        XCTAssertTrue(capturedResults.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(url: URL = URL(string: "https://a-url.com")!,
