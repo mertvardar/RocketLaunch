@@ -31,7 +31,7 @@ public final class RemoteLaunchLoader {
             switch result {
             case let .success(data, response):
                 if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) {
-                    completion(.success(root.result))
+                    completion(.success(root.result.map { $0.result }))
                 } else {
                     completion(.failure(.invalidData))
                 }
@@ -43,5 +43,15 @@ public final class RemoteLaunchLoader {
 }
 
 private struct Root: Decodable {
-    let result: [LaunchItem]
+    let result: [Result]
+}
+
+private struct Result: Decodable {
+    let id: Int
+    let name: String
+    let date_str: String
+
+    var result: LaunchItem {
+        return LaunchItem(id: id, name: name, date: date_str)
+    }
 }

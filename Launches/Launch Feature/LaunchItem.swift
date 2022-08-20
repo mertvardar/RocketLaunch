@@ -18,11 +18,3 @@ public struct LaunchItem: Equatable {
         self.date = date
     }
 }
-
-extension LaunchItem: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case date = "date_str"
-    }
-}
