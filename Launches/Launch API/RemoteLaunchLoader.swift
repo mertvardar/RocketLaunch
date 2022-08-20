@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class RemoteLaunchLoader {
+public final class RemoteLaunchLoader: LaunchLoader {
     private let url: URL
     private let client: HTTPClient
 
