@@ -33,7 +33,7 @@ internal final class LaunchItemsMapper {
     internal static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteLaunchLoader.Result {
         guard response.statusCode == LaunchItemsMapper.OK_200,
               let root = try? JSONDecoder().decode(Root.self, from: data) else {
-            return .failure(.invalidData)
+            return .failure(RemoteLaunchLoader.Error.invalidData)
         }
 
         return .success(root.launches)

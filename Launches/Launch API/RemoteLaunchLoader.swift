@@ -16,7 +16,7 @@ public final class RemoteLaunchLoader: LaunchLoader {
         case invalidData
     }
 
-    public typealias Result = LoadLaunchResult<Error>
+    public typealias Result = LoadLaunchResult
 
     public init(url: URL, client: HTTPClient) {
         self.url = url
@@ -31,7 +31,7 @@ public final class RemoteLaunchLoader: LaunchLoader {
             case let .success(data, response):
                 completion(LaunchItemsMapper.map(data, from: response))
             case .failure:
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             }
         }
     }
