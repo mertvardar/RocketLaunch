@@ -16,10 +16,7 @@ public final class RemoteLaunchLoader {
         case invalidData
     }
 
-    public enum Result: Equatable {
-        case success([LaunchItem])
-        case failure(Error)
-    }
+    public typealias Result = LoadLaunchResult<Error>
 
     public init(url: URL, client: HTTPClient) {
         self.url = url

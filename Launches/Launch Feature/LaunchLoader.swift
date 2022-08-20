@@ -7,11 +7,15 @@
 
 import Foundation
 
-enum LoadLaunchResult {
+public enum LoadLaunchResult<Error: Swift.Error> {
     case success([LaunchItem])
-    case error(Error)
+    case failure(Error)
 }
 
+extension LoadLaunchResult: Equatable where Error: Equatable {}
+
 protocol LaunchLoader {
-    func load(completion: @escaping (LoadLaunchResult) -> Void)
+    associatedtype Error: Swift.Error
+
+    func load(completion: @escaping (LoadLaunchResult<Error>) -> Void)
 }
