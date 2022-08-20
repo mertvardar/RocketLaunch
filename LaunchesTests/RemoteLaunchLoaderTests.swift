@@ -76,19 +76,13 @@ class RemoteLaunchLoaderTests: XCTestCase {
     func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
         let (sut, client) = makeSUT()
 
-        let item1 = LaunchItem(id: 1, name: "Item 1", date: "Aug 19")
-        let item1JSON = ["id": item1.id,
-                         "name": item1.name,
-                         "date_str": item1.date] as [String:Any]
-        let item2 = LaunchItem(id: 2, name: "Item 2", date: "Aug 20")
-        let item2JSON = ["id": item2.id,
-                         "name": item2.name,
-                         "date_str": item2.date] as [String:Any]
-        let resultJSON = ["result": [item1JSON, item2JSON]]
+        let item1 = makeItem(id: 1, name: "Item 1", date: "Aug 19")
+        let item2 = makeItem(id: 2, name: "Item 2", date: "Aug 20")
 
-        expect(sut, toCompleteWith: .success([item1, item2])) {
-            let json = try! JSONSerialization.data(withJSONObject: resultJSON)
-            client.complete(with: 200, data: json)
+        let result = [item1.model, item2.model]
+
+        expect(sut, toCompleteWith: .success(result)) {
+            client.complete(with: 200, data: makeResultJSONData([item1.json, item2.json]))
         }
     }
 
@@ -98,6 +92,19 @@ class RemoteLaunchLoaderTests: XCTestCase {
         let client = HTTPCLientSpy()
         let sut = RemoteLaunchLoader(url: url, client: client)
         return (sut, client)
+    }
+
+    private func makeItem(id: Int, name: String, date: String) -> (model: LaunchItem, json: [String: Any]) {
+        let item = LaunchItem(id: id, name: name, date: date)
+        let json = ["id": id,
+                    "name": name,
+                    "date_str": date] as [String:Any]
+        return (item, json)
+    }
+
+    private func makeResultJSONData(_ result: [[String: Any]]) -> Data {
+        let json = ["result": result]
+        return try! JSONSerialization.data(withJSONObject: json)
     }
 
     private func expect(_ sut: RemoteLaunchLoader,
