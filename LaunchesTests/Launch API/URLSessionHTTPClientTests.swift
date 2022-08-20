@@ -71,7 +71,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
 
         func stub(url: URL, task: URLSessionDataTask = FakeURLSessionDataTask(), error: Error? = nil) {
-            stubs[url] = Stub(task: task, error: nil)
+            stubs[url] = Stub(task: task, error: error)
         }
 
         @discardableResult
