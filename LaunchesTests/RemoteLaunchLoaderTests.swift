@@ -38,13 +38,10 @@ class RemoteLaunchLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
 
-        var capturedErrors = [RemoteLaunchLoader.Error]()
-        sut.load { capturedErrors.append($0) }
-
-        let clientError = NSError(domain: "Test", code: 0)
-        client.complete(with: clientError)
-
-        XCTAssertEqual(capturedErrors, [.connectivity])
+        expect(sut, toCompleteWithError: .connectivity) {
+            let clientError = NSError(domain: "Test", code: 0)
+            client.complete(with: clientError)
+        }
     }
 
     func test_load_deliversErrorOnNon200HTTPResponse() {
@@ -52,23 +49,19 @@ class RemoteLaunchLoaderTests: XCTestCase {
         let samples = [199, 201, 300, 400, 500]
 
         samples.enumerated().forEach { index, code in
-            var capturedErrors = [RemoteLaunchLoader.Error]()
-            sut.load { capturedErrors.append($0) }
-
-            client.complete(with: code, at: index)
-            XCTAssertEqual(capturedErrors, [.invalidData])
+            expect(sut, toCompleteWithError: .invalidData) {
+                client.complete(with: code, at: index)
+            }
         }
     }
 
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
 
-        var capturedErrors = [RemoteLaunchLoader.Error]()
-        sut.load { capturedErrors.append($0) }
-
-        let invalidJSON = Data("invalidJSON".utf8)
-        client.complete(with: 200, data: invalidJSON)
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        expect(sut, toCompleteWithError: .invalidData) {
+            let invalidJSON = Data("invalidJSON".utf8)
+            client.complete(with: 200, data: invalidJSON)
+        }
     }
 
     // MARK: - Helpers
@@ -77,6 +70,19 @@ class RemoteLaunchLoaderTests: XCTestCase {
         let client = HTTPCLientSpy()
         let sut = RemoteLaunchLoader(url: url, client: client)
         return (sut, client)
+    }
+
+    private func expect(_ sut: RemoteLaunchLoader,
+                        toCompleteWithError error: RemoteLaunchLoader.Error,
+                        when action: () -> Void,
+                        file: StaticString = #file,
+                        line: UInt = #line) {
+        var capturedErrors = [RemoteLaunchLoader.Error]()
+        sut.load { capturedErrors.append($0) }
+
+        action()
+
+        XCTAssertEqual(capturedErrors, [error], file: file, line: line)
     }
 
     private class HTTPCLientSpy: HTTPClient {
