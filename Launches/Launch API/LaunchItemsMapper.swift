@@ -10,6 +10,10 @@ import Foundation
 internal final class LaunchItemsMapper {
     private struct Root: Decodable {
         let result: [Result]
+
+        var launches: [LaunchItem] {
+            result.map { $0.result }
+        }
     }
 
     private struct Result: Decodable {
@@ -26,11 +30,12 @@ internal final class LaunchItemsMapper {
         return 200
     }
 
-    internal static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [LaunchItem] {
-        guard response.statusCode == LaunchItemsMapper.OK_200 else {
-            throw RemoteLaunchLoader.Error.invalidData
+    internal static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteLaunchLoader.Result {
+        guard response.statusCode == LaunchItemsMapper.OK_200,
+              let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            return .failure(.invalidData)
         }
-        let root = try JSONDecoder().decode(Root.self, from: data)
-        return root.result.map { $0.result }
+
+        return .success(root.launches)
     }
 }

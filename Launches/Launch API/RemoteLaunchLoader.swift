@@ -30,13 +30,7 @@ public final class RemoteLaunchLoader {
         client.get(from: url) { result in
             switch result {
             case let .success(data, response):
-                do {
-                    let result = try LaunchItemsMapper.map(data, response)
-                    completion(.success(result))
-                } catch {
-                    completion(.failure(.invalidData))
-                }
-
+                completion(LaunchItemsMapper.map(data, from: response))
             case .failure:
                 completion(.failure(.connectivity))
             }
