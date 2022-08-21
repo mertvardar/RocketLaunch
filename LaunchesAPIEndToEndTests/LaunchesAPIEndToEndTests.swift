@@ -11,6 +11,17 @@ import Launches
 class LaunchesAPIEndToEndTests: XCTestCase {
 
     func test_endToEndTestServerGETLaunchesResult_matchesFixedTestData() {
+        switch getLaunchesResult() {
+        case let .success(items)?:
+            XCTAssertEqual(items.count, 5, "Expected 5 items in the test url, got \(items.count) instead.")
+        case let .failure(error)?:
+            XCTFail("Expected successful result, got \(error) instead.")
+        default:
+            XCTFail("Expected successful result, got no result instead.")
+        }
+    }
+
+    private func getLaunchesResult() -> LoadLaunchResult? {
         let testServerURL = URL(string: "https://fdo.rocketlaunch.live/json/launches/next/5")!
         let client = URLSessionHTTPClient()
         let loader = RemoteLaunchLoader(url: testServerURL, client: client)
@@ -23,14 +34,6 @@ class LaunchesAPIEndToEndTests: XCTestCase {
             exp.fulfill()
         }
         wait(for: [exp], timeout: 5.0)
-
-        switch receivedResult {
-        case let .success(items)?:
-            XCTAssertEqual(items.count, 5, "Expected 5 items in the test url, got \(items.count) instead.")
-        case let .failure(error)?:
-            XCTFail("Expected successful result, got \(error) instead.")
-        default:
-            XCTFail("Expected successful result, got no result instead.")
-        }
+        return receivedResult
     }
 }
