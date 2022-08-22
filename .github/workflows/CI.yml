@@ -7,14 +7,13 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build:
+
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Select Xcode
-      run: sudo xcode-select -switch /Applications/Xcode_12.app
-
-    - name: Build and test
-      run: xcodebuild clean build test -workspace Launches.xcworkspace -scheme "CI" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 11" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
+    - uses: actions/checkout@v3
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
