@@ -9,16 +9,19 @@ import XCTest
 import Launches
 
 class LocalLaunchLoader {
-    let store: LaunchStore
+    private let store: LaunchStore
+    private let currentDate: () -> Date
 
-    init(store: LaunchStore) {
+    init(store: LaunchStore,
+         currentDate: @escaping () -> Date) {
         self.store = store
+        self.currentDate = currentDate
     }
 
     func save(_ launchItems: [LaunchItem]) {
         store.deleteCachedLaunches { [unowned self] error in
             if error == nil {
-                self.store.insert(launchItems)
+                self.store.insert(launchItems, timestamp: self.currentDate())
             }
         }
     }
@@ -29,6 +32,7 @@ class LaunchStore {
 
     var deleteCachedLaunchCallCount = 0
     var insertCallCount = 0
+    var insertions = [(items: [LaunchItem], timestamp: Date)]()
 
     private var deletionCompletions = [DeletionCompletion]()
 
@@ -45,8 +49,9 @@ class LaunchStore {
         deletionCompletions[index](nil)
     }
 
-    func insert(_ launchItems: [LaunchItem]) {
+    func insert(_ launchItems: [LaunchItem], timestamp: Date) {
         insertCallCount += 1
+        insertions.append((launchItems, timestamp))
     }
 }
 
@@ -89,12 +94,27 @@ class CacheLaunchUseCaseTests: XCTestCase {
         XCTAssertEqual(store.insertCallCount, 1)
     }
 
+    func test_save_requestNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
+        let timestamp = Date()
+        let (sut, store) = makeSUT(currentDate: { timestamp })
+        let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
+                     LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
+
+        sut.save(items)
+        store.completeDeletionSuccessfully()
+
+        XCTAssertEqual(store.insertions.count, 1)
+        XCTAssertEqual(store.insertions.first?.items, items)
+        XCTAssertEqual(store.insertions.first?.timestamp, timestamp)
+    }
+
     // MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #file,
+    private func makeSUT(currentDate: @escaping () -> Date = Date.init,
+                         file: StaticString = #file,
                          line: UInt = #line) -> (sut: LocalLaunchLoader, store: LaunchStore) {
         let store = LaunchStore()
-        let sut = LocalLaunchLoader(store: store)
+        let sut = LocalLaunchLoader(store: store, currentDate: currentDate)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)
         return (sut, store)
