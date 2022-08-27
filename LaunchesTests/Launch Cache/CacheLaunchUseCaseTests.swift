@@ -30,14 +30,17 @@ class LocalLaunchLoader {
 class LaunchStore {
     typealias DeletionCompletion = (Error?) -> Void
 
-    var deleteCachedLaunchCallCount = 0
-    var insertions = [(items: [LaunchItem], timestamp: Date)]()
+    enum ReceivedMessage: Equatable {
+        case deleteCacheLaunch
+        case insertCacheLaunch([LaunchItem], Date)
+    }
+    private(set) var receivedMessages = [ReceivedMessage]()
 
     private var deletionCompletions = [DeletionCompletion]()
 
     func deleteCachedLaunches(completion: @escaping DeletionCompletion) {
-        deleteCachedLaunchCallCount += 1
         deletionCompletions.append(completion)
+        receivedMessages.append(.deleteCacheLaunch)
     }
 
     func completeDeletion(with error: Error, at index: Int = 0) {
@@ -49,16 +52,16 @@ class LaunchStore {
     }
 
     func insert(_ launchItems: [LaunchItem], timestamp: Date) {
-        insertions.append((launchItems, timestamp))
+        receivedMessages.append(.insertCacheLaunch(launchItems, timestamp))
     }
 }
 
 class CacheLaunchUseCaseTests: XCTestCase {
 
-    func test_init_doesNotDeleteCacheUponCreation() {
+    func test_init_doesNotMessageStoreUponCreation() {
         let (_, store) = makeSUT()
 
-        XCTAssertEqual(store.deleteCachedLaunchCallCount, 0)
+        XCTAssertEqual(store.receivedMessages, [])
     }
 
     func test_save_requestCacheDeletion() {
@@ -66,7 +69,8 @@ class CacheLaunchUseCaseTests: XCTestCase {
         let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
                      LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
         sut.save(items)
-        XCTAssertEqual(store.deleteCachedLaunchCallCount, 1)
+
+        XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch])
     }
 
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
@@ -78,7 +82,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
         sut.save(items)
         store.completeDeletion(with: deletionError)
 
-        XCTAssertEqual(store.insertions.count, 0)
+        XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch])
     }
 
     func test_save_requestNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
@@ -90,9 +94,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
         sut.save(items)
         store.completeDeletionSuccessfully()
 
-        XCTAssertEqual(store.insertions.count, 1)
-        XCTAssertEqual(store.insertions.first?.items, items)
-        XCTAssertEqual(store.insertions.first?.timestamp, timestamp)
+        XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch, .insertCacheLaunch(items, timestamp)])
     }
 
     // MARK: - Helpers
