@@ -23,7 +23,7 @@ class LaunchesAPIEndToEndTests: XCTestCase {
 
     private func getLaunchesResult(file: StaticString = #file, line: UInt = #line) -> LoadLaunchResult? {
         let testServerURL = URL(string: "https://fdo.rocketlaunch.live/json/launches/next/5")!
-        let client = URLSessionHTTPClient()
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteLaunchLoader(url: testServerURL, client: client)
         trackForMemoryLeaks(client, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
