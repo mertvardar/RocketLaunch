@@ -18,8 +18,9 @@ class LocalLaunchLoader {
         self.currentDate = currentDate
     }
 
-    func save(_ launchItems: [LaunchItem]) {
+    func save(_ launchItems: [LaunchItem], completion: @escaping (Error?) -> Void) {
         store.deleteCachedLaunches { [unowned self] error in
+            completion(error)
             if error == nil {
                 self.store.insert(launchItems, timestamp: self.currentDate())
             }
@@ -68,7 +69,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
                      LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
-        sut.save(items)
+        sut.save(items) { _ in }
 
         XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch])
     }
@@ -79,7 +80,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
                      LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
         let deletionError = anyNSError()
 
-        sut.save(items)
+        sut.save(items) { _ in }
         store.completeDeletion(with: deletionError)
 
         XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch])
@@ -91,10 +92,29 @@ class CacheLaunchUseCaseTests: XCTestCase {
         let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
                      LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
 
-        sut.save(items)
+        sut.save(items) { _ in }
         store.completeDeletionSuccessfully()
 
         XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch, .insertCacheLaunch(items, timestamp)])
+    }
+
+    func test_save_failsOnDeletionError() {
+        let (sut, store) = makeSUT()
+        let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
+                     LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
+        let deletionError = anyNSError()
+
+        let exp = expectation(description: "Wait for completion")
+        var receivedError: Error?
+        sut.save(items) { error in
+            receivedError = error
+            exp.fulfill()
+        }
+        store.completeDeletion(with: deletionError)
+
+        wait(for: [exp], timeout: 1.0)
+
+        XCTAssertEqual(receivedError as NSError?, deletionError)
     }
 
     // MARK: - Helpers
