@@ -21,6 +21,7 @@
 		6E8ED0E428B0126E00C734D4 /* RemoteLaunchLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0E328B0126E00C734D4 /* RemoteLaunchLoaderTests.swift */; };
 		6E8ED0E728B02A5900C734D4 /* RemoteLaunchLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0E628B02A5900C734D4 /* RemoteLaunchLoader.swift */; };
 		6E8ED0E928B02A6900C734D4 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0E828B02A6900C734D4 /* HTTPClient.swift */; };
+		6EAA136E28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EAA136D28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		6E8ED0E328B0126E00C734D4 /* RemoteLaunchLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLaunchLoaderTests.swift; sourceTree = "<group>"; };
 		6E8ED0E628B02A5900C734D4 /* RemoteLaunchLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLaunchLoader.swift; sourceTree = "<group>"; };
 		6E8ED0E828B02A6900C734D4 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		6EAA136D28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheLaunchUseCaseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 		6E8ED0D228B0101B00C734D4 /* LaunchesTests */ = {
 			isa = PBXGroup;
 			children = (
+				6EAA136C28BA3E2C00456388 /* Launch Cache */,
 				6E1EE4CD28B17F5D005E5544 /* Helpers */,
 				6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */,
 				6E1EE4CA28B10991005E5544 /* Launch API */,
@@ -166,6 +169,14 @@
 				6E1EE4D028B2BED4005E5544 /* URLSessionHTTPClient.swift */,
 			);
 			path = "Launch API";
+			sourceTree = "<group>";
+		};
+		6EAA136C28BA3E2C00456388 /* Launch Cache */ = {
+			isa = PBXGroup;
+			children = (
+				6EAA136D28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift */,
+			);
+			path = "Launch Cache";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +339,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E8ED0D428B0101B00C734D4 /* LaunchesTests.swift in Sources */,
+				6EAA136E28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift in Sources */,
 				6E1EE4CC28B11B57005E5544 /* URLSessionHTTPClientTests.swift in Sources */,
 				6E1EE4CF28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift in Sources */,
 				6E8ED0E428B0126E00C734D4 /* RemoteLaunchLoaderTests.swift in Sources */,
