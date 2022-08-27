@@ -31,7 +31,6 @@ class LaunchStore {
     typealias DeletionCompletion = (Error?) -> Void
 
     var deleteCachedLaunchCallCount = 0
-    var insertCallCount = 0
     var insertions = [(items: [LaunchItem], timestamp: Date)]()
 
     private var deletionCompletions = [DeletionCompletion]()
@@ -50,7 +49,6 @@ class LaunchStore {
     }
 
     func insert(_ launchItems: [LaunchItem], timestamp: Date) {
-        insertCallCount += 1
         insertions.append((launchItems, timestamp))
     }
 }
@@ -80,18 +78,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
         sut.save(items)
         store.completeDeletion(with: deletionError)
 
-        XCTAssertEqual(store.insertCallCount, 0)
-    }
-
-    func test_save_requestNewCacheInsertionOnSuccessfulDeletion() {
-        let (sut, store) = makeSUT()
-        let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
-                     LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
-
-        sut.save(items)
-        store.completeDeletionSuccessfully()
-
-        XCTAssertEqual(store.insertCallCount, 1)
+        XCTAssertEqual(store.insertions.count, 0)
     }
 
     func test_save_requestNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
