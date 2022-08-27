@@ -31,15 +31,13 @@ class LaunchStore {
 class CacheLaunchUseCaseTests: XCTestCase {
 
     func test_init_doesNotDeleteCacheUponCreation() {
-        let store = LaunchStore()
-        _ = LocalLaunchLoader(store: store)
+        let (_, store) = makeSUT()
 
         XCTAssertEqual(store.deleteCachedLaunchCallCount, 0)
     }
 
     func test_save_requestCacheDeletion() {
-        let store = LaunchStore()
-        let sut = LocalLaunchLoader(store: store)
+        let (sut, store) = makeSUT()
         let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
                      LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
         sut.save(items)
@@ -47,6 +45,12 @@ class CacheLaunchUseCaseTests: XCTestCase {
     }
 
     // MARK: - Helpers
+
+    private func makeSUT() -> (sut: LocalLaunchLoader, store: LaunchStore) {
+        let store = LaunchStore()
+        let sut = LocalLaunchLoader(store: store)
+        return (sut, store)
+    }
 
     private func anyURL() -> URL {
         return URL(string: "http://any-url.com")!
