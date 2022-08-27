@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Launches
 
 class LocalLaunchLoader {
     let store: LaunchStore
@@ -13,10 +14,18 @@ class LocalLaunchLoader {
     init(store: LaunchStore) {
         self.store = store
     }
+
+    func save(_ launchItems: [LaunchItem]) {
+        store.deleteCachedLaunhes()
+    }
 }
 
 class LaunchStore {
     var deleteCachedLaunchCallCount = 0
+
+    func deleteCachedLaunhes() {
+        deleteCachedLaunchCallCount += 1
+    }
 }
 
 class CacheLaunchUseCaseTests: XCTestCase {
@@ -24,7 +33,22 @@ class CacheLaunchUseCaseTests: XCTestCase {
     func test_init_doesNotDeleteCacheUponCreation() {
         let store = LaunchStore()
         _ = LocalLaunchLoader(store: store)
-        
+
         XCTAssertEqual(store.deleteCachedLaunchCallCount, 0)
+    }
+
+    func test_save_requestCacheDeletion() {
+        let store = LaunchStore()
+        let sut = LocalLaunchLoader(store: store)
+        let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
+                     LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
+        sut.save(items)
+        XCTAssertEqual(store.deleteCachedLaunchCallCount, 1)
+    }
+
+    // MARK: - Helpers
+
+    private func anyURL() -> URL {
+        return URL(string: "http://any-url.com")!
     }
 }
