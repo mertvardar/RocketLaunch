@@ -1,5 +1,5 @@
 //
-//  RemoteLaunchLoaderTests.swift
+//  LoadLaunchFromRemoteUseCaseTests.swift
 //  LaunchesTests
 //
 //  Created by Mert Vardar on 19.08.2022.
@@ -8,7 +8,7 @@
 import XCTest
 import Launches
 
-class RemoteLaunchLoaderTests: XCTestCase {
+class LoadLaunchFromRemoteUseCaseTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
