@@ -46,9 +46,12 @@ class CacheLaunchUseCaseTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT() -> (sut: LocalLaunchLoader, store: LaunchStore) {
+    private func makeSUT(file: StaticString = #file,
+                         line: UInt = #line) -> (sut: LocalLaunchLoader, store: LaunchStore) {
         let store = LaunchStore()
         let sut = LocalLaunchLoader(store: store)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
         return (sut, store)
     }
 
