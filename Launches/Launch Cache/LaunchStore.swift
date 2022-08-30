@@ -14,16 +14,3 @@ public protocol LaunchStore {
     func deleteCachedLaunches(completion: @escaping DeletionCompletion)
     func insert(_ launchItems: [LocalLaunchItem], timestamp: Date, completion: @escaping InsertionCompletion)
 }
-
-
-public struct LocalLaunchItem: Equatable {
-    public let id: Int
-    public let name: String
-    public let date: String
-
-    public init(id: Int, name: String, date: String) {
-        self.id = id
-        self.name = name
-        self.date = date
-    }
-}
