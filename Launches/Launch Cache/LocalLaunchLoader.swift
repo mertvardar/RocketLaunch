@@ -11,13 +11,15 @@ public final class LocalLaunchLoader {
     private let store: LaunchStore
     private let currentDate: () -> Date
 
+    public typealias SaveResult = Error?
+
     public init(store: LaunchStore,
-         currentDate: @escaping () -> Date) {
+                currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
     }
 
-    public func save(_ launchItems: [LaunchItem], completion: @escaping (Error?) -> Void) {
+    public func save(_ launchItems: [LaunchItem], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedLaunches { [weak self] error in
             guard let self = self else { return }
 
@@ -29,7 +31,7 @@ public final class LocalLaunchLoader {
         }
     }
 
-    private func cache(_ items: [LaunchItem], with completion: @escaping (Error?) -> Void) {
+    private func cache(_ items: [LaunchItem], with completion: @escaping (SaveResult) -> Void) {
         store.insert(items, timestamp: currentDate()) { [weak self] error in
             guard self != nil else { return }
 

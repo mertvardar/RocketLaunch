@@ -81,7 +81,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
         let store = LaunchStoreSpy()
         var sut: LocalLaunchLoader? = LocalLaunchLoader(store: store, currentDate: Date.init)
 
-        var receivedResults = [Error?]()
+        var receivedResults = [LocalLaunchLoader.SaveResult?]()
         sut?.save([LaunchItem(id: 0, name: "Launch 0", date: "01012022")], completion: { receivedResults.append($0) })
 
         sut = nil
@@ -94,7 +94,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
         let store = LaunchStoreSpy()
         var sut: LocalLaunchLoader? = LocalLaunchLoader(store: store, currentDate: Date.init)
 
-        var receivedResults = [Error?]()
+        var receivedResults = [LocalLaunchLoader.SaveResult?]()
         sut?.save([LaunchItem(id: 0, name: "Launch 0", date: "01012022")], completion: { receivedResults.append($0) })
 
         store.completeDeletionSuccessfully()
