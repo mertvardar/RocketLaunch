@@ -42,11 +42,12 @@ class CacheLaunchUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { timestamp })
         let items = [LaunchItem(id: 0, name: "Launch 1", date: "01012022"),
                      LaunchItem(id: 1, name: "Launch 2", date: "02012022")]
+        let localItems = items.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
 
         sut.save(items) { _ in }
         store.completeDeletionSuccessfully()
 
-        XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch, .insertCacheLaunch(items, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCacheLaunch, .insertCacheLaunch(localItems, timestamp)])
     }
 
     func test_save_failsOnDeletionError() {
@@ -147,7 +148,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
 
         enum ReceivedMessage: Equatable {
             case deleteCacheLaunch
-            case insertCacheLaunch([LaunchItem], Date)
+            case insertCacheLaunch([LocalLaunchItem], Date)
         }
         private(set) var receivedMessages = [ReceivedMessage]()
 
@@ -171,7 +172,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
             insertionCompletions[index](error)
         }
 
-        func insert(_ launchItems: [LaunchItem],
+        func insert(_ launchItems: [LocalLaunchItem],
                     timestamp: Date,
                     completion: @escaping InsertionCompletion) {
             insertionCompletions.append(completion)

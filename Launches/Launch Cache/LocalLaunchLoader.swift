@@ -32,10 +32,17 @@ public final class LocalLaunchLoader {
     }
 
     private func cache(_ items: [LaunchItem], with completion: @escaping (SaveResult) -> Void) {
-        store.insert(items, timestamp: currentDate()) { [weak self] error in
+        store.insert(items.toLocal(), timestamp: currentDate()) { [weak self] error in
             guard self != nil else { return }
 
             completion(error)
         }
+    }
+}
+
+
+private extension Array where Element == LaunchItem {
+    func toLocal() -> [LocalLaunchItem] {
+        return map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
     }
 }
