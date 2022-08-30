@@ -25,11 +25,16 @@ class LocalLaunchLoader {
             if let cacheDeletionError = error {
                 completion(cacheDeletionError)
             } else {
-                self.store.insert(launchItems, timestamp: self.currentDate()) { [weak self] error in
-                    guard self != nil else { return }
-                    completion(error)
-                }
+                self.cache(launchItems, with: completion)
             }
+        }
+    }
+
+    private func cache(_ items: [LaunchItem], with completion: @escaping (Error?) -> Void) {
+        store.insert(items, timestamp: currentDate()) { [weak self] error in
+            guard self != nil else { return }
+
+            completion(error)
         }
     }
 }
@@ -175,7 +180,7 @@ class CacheLaunchUseCaseTests: XCTestCase {
         return NSError(domain: "any error", code: 0)
     }
 
-     private class LaunchStoreSpy: LaunchStore {
+    private class LaunchStoreSpy: LaunchStore {
         typealias DeletionCompletion = (Error?) -> Void
         typealias InsertionCompletion = (Error?) -> Void
 
