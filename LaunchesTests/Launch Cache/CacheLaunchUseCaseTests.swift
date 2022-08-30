@@ -19,7 +19,9 @@ class LocalLaunchLoader {
     }
 
     func save(_ launchItems: [LaunchItem], completion: @escaping (Error?) -> Void) {
-        store.deleteCachedLaunches { [unowned self] error in
+        store.deleteCachedLaunches { [weak self] error in
+            guard let self = self else { return }
+            
             if let error = error {
                 completion(error)
             } else {
@@ -104,6 +106,19 @@ class CacheLaunchUseCaseTests: XCTestCase {
             store.completeDeletionSuccessfully()
             store.completeInsertionSuccessfully()
         }
+    }
+
+    func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceDeallocated() {
+        let store = LaunchStoreSpy()
+        var sut: LocalLaunchLoader? = LocalLaunchLoader(store: store, currentDate: Date.init)
+
+        var receivedResults = [Error?]()
+        sut?.save([LaunchItem(id: 0, name: "Launch 0", date: "01012022")], completion: { receivedResults.append($0) })
+
+        sut = nil
+        store.completeDeletion(with: anyNSError())
+
+        XCTAssertTrue(receivedResults.isEmpty)
     }
 
     // MARK: - Helpers
