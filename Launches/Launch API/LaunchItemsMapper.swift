@@ -7,12 +7,6 @@
 
 import Foundation
 
-internal struct RemoteLaunchItem: Decodable {
-    internal let id: Int
-    internal let name: String
-    internal let date_str: String
-}
-
 internal final class LaunchItemsMapper {
     private struct Root: Decodable {
         let result: [RemoteLaunchItem]
