@@ -22,8 +22,8 @@ class LocalLaunchLoader {
         store.deleteCachedLaunches { [weak self] error in
             guard let self = self else { return }
 
-            if let error = error {
-                completion(error)
+            if let cacheDeletionError = error {
+                completion(cacheDeletionError)
             } else {
                 self.store.insert(launchItems, timestamp: self.currentDate()) { [weak self] error in
                     guard self != nil else { return }
