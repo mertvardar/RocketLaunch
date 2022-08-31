@@ -60,4 +60,8 @@ class LaunchStoreSpy: LaunchStore {
     func completeRetrievalSuccessfully(at index: Int = 0) {
         receiveCompletions[index](nil)
     }
+
+    func completeRetrievalWithEmptyCache(at index: Int = 0) {
+        receiveCompletions[index](nil)
+    }
 }
