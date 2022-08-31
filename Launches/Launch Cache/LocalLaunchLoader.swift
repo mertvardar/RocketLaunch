@@ -31,6 +31,10 @@ public final class LocalLaunchLoader {
         }
     }
 
+    public func load() {
+        store.retrieve()
+    }
+
     private func cache(_ items: [LaunchItem], with completion: @escaping (SaveResult) -> Void) {
         store.insert(items.toLocal(), timestamp: currentDate()) { [weak self] error in
             guard self != nil else { return }

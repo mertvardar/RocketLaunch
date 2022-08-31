@@ -13,4 +13,5 @@ public protocol LaunchStore {
 
     func deleteCachedLaunches(completion: @escaping DeletionCompletion)
     func insert(_ launchItems: [LocalLaunchItem], timestamp: Date, completion: @escaping InsertionCompletion)
+    func retrieve()
 }
