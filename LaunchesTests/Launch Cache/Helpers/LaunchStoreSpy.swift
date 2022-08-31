@@ -9,9 +9,6 @@ import Foundation
 import Launches
 
 class LaunchStoreSpy: LaunchStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
-
     enum ReceivedMessage: Equatable {
         case deleteCacheLaunch
         case insertCacheLaunch([LocalLaunchItem], Date)
@@ -21,6 +18,7 @@ class LaunchStoreSpy: LaunchStore {
 
     private var deletionCompletions = [DeletionCompletion]()
     private var insertionCompletions = [InsertionCompletion]()
+    private var receiveCompletions = [RetrieveCompletion]()
 
     func deleteCachedLaunches(completion: @escaping DeletionCompletion) {
         deletionCompletions.append(completion)
@@ -50,7 +48,12 @@ class LaunchStoreSpy: LaunchStore {
         insertionCompletions[index](nil)
     }
 
-    func retrieve() {
+    func completeRetrieval(with error: Error, at index: Int = 0) {
+        receiveCompletions[index](error)
+    }
+
+    func retrieve(completion: @escaping RetrieveCompletion) {
+        receiveCompletions.append(completion)
         receivedMessages.append(.retrieve)
     }
 }
