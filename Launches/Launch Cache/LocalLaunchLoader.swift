@@ -12,6 +12,7 @@ public final class LocalLaunchLoader {
     private let currentDate: () -> Date
 
     public typealias SaveResult = Error?
+    public typealias LoadResult = LoadLaunchResult
 
     public init(store: LaunchStore,
                 currentDate: @escaping () -> Date) {
@@ -31,8 +32,12 @@ public final class LocalLaunchLoader {
         }
     }
 
-    public func load(completion: @escaping (Error?) -> Void) {
-        store.retrieve(completion: completion)
+    public func load(completion: @escaping (LoadResult?) -> Void) {
+        store.retrieve { error in
+            if let error = error {
+                completion(.failure(error))
+            }
+        }
     }
 
     private func cache(_ items: [LaunchItem], with completion: @escaping (SaveResult) -> Void) {

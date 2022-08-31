@@ -56,4 +56,8 @@ class LaunchStoreSpy: LaunchStore {
         receiveCompletions.append(completion)
         receivedMessages.append(.retrieve)
     }
+
+    func completeRetrievalSuccessfully(at index: Int = 0) {
+        receiveCompletions[index](nil)
+    }
 }
