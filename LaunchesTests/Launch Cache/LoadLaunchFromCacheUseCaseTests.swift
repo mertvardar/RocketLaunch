@@ -41,7 +41,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         }
     }
 
-    func test_load_deliversCachedImagesOnLessThanSevenDaysOldCache() {
+    func test_load_deliversCachedLaunchesOnLessThanSevenDaysOldCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
@@ -54,7 +54,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         }
     }
 
-    func test_load_deliversNoImagesSevenDaysOldCache() {
+    func test_load_deliversNoLaunchesSevenDaysOldCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
@@ -67,7 +67,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         }
     }
 
-    func test_load_deliversNoImagesMoreThanSevenDaysOldCache() {
+    func test_load_deliversNoLaunchesMoreThanSevenDaysOldCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
