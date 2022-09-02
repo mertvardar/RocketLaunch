@@ -49,7 +49,7 @@ class LaunchStoreSpy: LaunchStore {
     }
 
     func completeRetrieval(with error: Error, at index: Int = 0) {
-        receiveCompletions[index](error)
+        receiveCompletions[index](.failure(error))
     }
 
     func retrieve(completion: @escaping RetrieveCompletion) {
@@ -57,11 +57,11 @@ class LaunchStoreSpy: LaunchStore {
         receivedMessages.append(.retrieve)
     }
 
-    func completeRetrievalSuccessfully(at index: Int = 0) {
-        receiveCompletions[index](nil)
+    func completeRetrievalWithEmptyCache(at index: Int = 0) {
+        receiveCompletions[index](.empty)
     }
 
-    func completeRetrievalWithEmptyCache(at index: Int = 0) {
-        receiveCompletions[index](nil)
+    func completeRetrieval(with launches: [LocalLaunchItem], timestamp: Date, at index: Int = 0) {
+        receiveCompletions[index](.found(launches: launches, timestamp: timestamp))
     }
 }
