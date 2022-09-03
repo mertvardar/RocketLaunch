@@ -37,6 +37,7 @@ public final class LocalLaunchLoader {
         store.retrieve { [unowned self] result in
             switch result {
             case let .failure(error):
+                self.store.deleteCachedLaunches { _ in }
                 completion(.failure(error))
             case let .found(launches, timestamp) where self.validate(timestamp):
                 completion(.success(launches.toModels()))
