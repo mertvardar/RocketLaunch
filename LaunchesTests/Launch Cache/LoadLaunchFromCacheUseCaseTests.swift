@@ -140,6 +140,19 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCacheLaunch])
     }
 
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        let store = LaunchStoreSpy()
+        var sut: LocalLaunchLoader? = LocalLaunchLoader(store: store, currentDate: Date.init)
+
+        var receivedResults = [LocalLaunchLoader.LoadResult]()
+        sut?.load { receivedResults.append($0) }
+
+        sut = nil
+        store.completeRetrievalWithEmptyCache()
+
+        XCTAssertTrue(receivedResults.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(currentDate: @escaping () -> Date = Date.init,
