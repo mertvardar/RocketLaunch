@@ -187,18 +187,4 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         action()
         wait(for: [exp], timeout: 1.0)
     }
-
-    private func anyNSError() -> NSError {
-        return NSError(domain: "any error", code: 0)
-    }
-}
-
-private extension Date {
-    func adding(days: Int) -> Date {
-        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-    }
-
-    func adding(seconds: TimeInterval) -> Date {
-        return self + seconds
-    }
 }
