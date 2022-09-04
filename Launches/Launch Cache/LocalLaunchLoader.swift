@@ -52,8 +52,13 @@ public final class LocalLaunchLoader {
     }
 
     public func validateCache() {
-        store.retrieve { _ in }
-        store.deleteCachedLaunches { _ in }
+        store.retrieve { [unowned self] result in
+            switch result {
+            case .failure:
+                self.store.deleteCachedLaunches { _ in }
+            default: break
+            }
+        }
     }
 
     private var maxCacheAgeInDays: Int {
