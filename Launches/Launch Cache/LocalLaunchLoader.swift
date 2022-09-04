@@ -42,9 +42,7 @@ public final class LocalLaunchLoader {
                 completion(.failure(error))
             case let .found(launches, timestamp) where self.validate(timestamp):
                 completion(.success(launches.toModels()))
-            case .found:
-                completion(.success([]))
-            case .empty:
+            case .found, .empty:
                 completion(.success([]))
             }
         }
