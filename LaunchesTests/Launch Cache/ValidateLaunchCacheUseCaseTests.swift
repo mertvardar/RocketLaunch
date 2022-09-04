@@ -76,6 +76,18 @@ class ValidateLaunchCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCacheLaunch])
     }
 
+    func test_validateCache_doesNotDeleteInvalidCacheAfterSUTInstanceHasBeenDeallocated() {
+        let store = LaunchStoreSpy()
+        var sut: LocalLaunchLoader? = LocalLaunchLoader(store: store, currentDate: Date.init)
+        
+        sut?.validateCache()
+
+        sut = nil
+        store.completeRetrieval(with: anyNSError())
+
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(currentDate: @escaping () -> Date = Date.init,
