@@ -20,6 +20,7 @@
 		6E86549E28BEB0900050EE49 /* LocalLaunchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E86549D28BEB0900050EE49 /* LocalLaunchItem.swift */; };
 		6E8654A028C004B30050EE49 /* LoadLaunchFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E86549F28C004B30050EE49 /* LoadLaunchFromCacheUseCaseTests.swift */; };
 		6E8654A228C005820050EE49 /* LaunchStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654A128C005820050EE49 /* LaunchStoreSpy.swift */; };
+		6E8654A528C54F320050EE49 /* ValidateLaunchCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654A428C54F320050EE49 /* ValidateLaunchCacheUseCaseTests.swift */; };
 		6E8ED0CF28B0101B00C734D4 /* Launches.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E8ED0C428B0101B00C734D4 /* Launches.framework */; };
 		6E8ED0D428B0101B00C734D4 /* LaunchesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */; };
 		6E8ED0DF28B0105C00C734D4 /* LaunchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8ED0DE28B0105C00C734D4 /* LaunchItem.swift */; };
@@ -60,6 +61,7 @@
 		6E86549D28BEB0900050EE49 /* LocalLaunchItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalLaunchItem.swift; sourceTree = "<group>"; };
 		6E86549F28C004B30050EE49 /* LoadLaunchFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadLaunchFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
 		6E8654A128C005820050EE49 /* LaunchStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchStoreSpy.swift; sourceTree = "<group>"; };
+		6E8654A428C54F320050EE49 /* ValidateLaunchCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateLaunchCacheUseCaseTests.swift; sourceTree = "<group>"; };
 		6E8ED0C428B0101B00C734D4 /* Launches.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Launches.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E8ED0CE28B0101B00C734D4 /* LaunchesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LaunchesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E8ED0D328B0101B00C734D4 /* LaunchesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchesTests.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				6E8654A328C005990050EE49 /* Helpers */,
+				6E8654A428C54F320050EE49 /* ValidateLaunchCacheUseCaseTests.swift */,
 				6EAA136D28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift */,
 				6E86549F28C004B30050EE49 /* LoadLaunchFromCacheUseCaseTests.swift */,
 			);
@@ -381,6 +384,7 @@
 				6E8654A228C005820050EE49 /* LaunchStoreSpy.swift in Sources */,
 				6EAA136E28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift in Sources */,
 				6E1EE4CC28B11B57005E5544 /* URLSessionHTTPClientTests.swift in Sources */,
+				6E8654A528C54F320050EE49 /* ValidateLaunchCacheUseCaseTests.swift in Sources */,
 				6E1EE4CF28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift in Sources */,
 				6E8ED0E428B0126E00C734D4 /* RemoteLaunchLoaderTests.swift in Sources */,
 			);
