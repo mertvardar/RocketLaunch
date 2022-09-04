@@ -12,9 +12,6 @@ public final class LocalLaunchLoader: LaunchLoader {
     private let currentDate: () -> Date
     private let calendar = Calendar(identifier: .gregorian)
 
-    public typealias SaveResult = Error?
-    public typealias LoadResult = LoadLaunchResult
-
     public init(store: LaunchStore,
                 currentDate: @escaping () -> Date) {
         self.store = store
@@ -31,6 +28,8 @@ public final class LocalLaunchLoader: LaunchLoader {
 }
 
 extension LocalLaunchLoader {
+    public typealias SaveResult = Error?
+
     public func save(_ launchItems: [LaunchItem], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedLaunches { [weak self] error in
             guard let self = self else { return }
@@ -53,6 +52,8 @@ extension LocalLaunchLoader {
 }
 
 extension LocalLaunchLoader {
+    public typealias LoadResult = LoadLaunchResult
+    
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
