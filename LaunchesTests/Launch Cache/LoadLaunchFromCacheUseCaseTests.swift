@@ -98,7 +98,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
 
-    func test_load_doesNotDeletesCacheOnLessThanSevenDaysOldCache() {
+    func test_load_hasNoSideEffectsLessThanSevenDaysOldCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
