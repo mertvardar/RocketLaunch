@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class LocalLaunchLoader {
+public final class LocalLaunchLoader: LaunchLoader {
     private let store: LaunchStore
     private let currentDate: () -> Date
     private let calendar = Calendar(identifier: .gregorian)
