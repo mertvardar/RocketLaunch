@@ -112,7 +112,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
 
-    func test_load_deletesCacheOnSevenDaysOldCache() {
+    func test_load_hasNoSideEffectsOnSevenDaysOldCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
@@ -123,10 +123,10 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         sut.load { _ in }
         store.completeRetrieval(with: localLaunches, timestamp: sevenDaysOldTimestamp)
 
-        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCacheLaunch])
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
 
-    func test_load_deletesCacheOnMoreThanSevenDaysOldCache() {
+    func test_load_hasNoSideEffectsOnMoreThanSevenDaysOldCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
@@ -137,7 +137,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         sut.load { _ in }
         store.completeRetrieval(with: localLaunches, timestamp: moreThanSevenDaysOldTimestamp)
 
-        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCacheLaunch])
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
 
     func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {

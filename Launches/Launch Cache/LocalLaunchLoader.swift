@@ -43,7 +43,6 @@ public final class LocalLaunchLoader {
             case let .found(launches, timestamp) where self.validate(timestamp):
                 completion(.success(launches.toModels()))
             case .found:
-                self.store.deleteCachedLaunches { _ in}
                 completion(.success([]))
             case .empty:
                 completion(.success([]))
@@ -56,7 +55,9 @@ public final class LocalLaunchLoader {
             switch result {
             case .failure:
                 self.store.deleteCachedLaunches { _ in }
-            default: break
+            case let .found(_, timestamp) where !self.validate(timestamp):
+                self.store.deleteCachedLaunches { _ in }
+            case .empty, .found: break
             }
         }
     }
