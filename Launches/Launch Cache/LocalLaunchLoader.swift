@@ -39,7 +39,6 @@ public final class LocalLaunchLoader {
             
             switch result {
             case let .failure(error):
-                self.store.deleteCachedLaunches { _ in }
                 completion(.failure(error))
             case let .found(launches, timestamp) where self.validate(timestamp):
                 completion(.success(launches.toModels()))
@@ -50,6 +49,11 @@ public final class LocalLaunchLoader {
                 completion(.success([]))
             }
         }
+    }
+
+    public func validateCache() {
+        store.retrieve { _ in }
+        store.deleteCachedLaunches { _ in }
     }
 
     private var maxCacheAgeInDays: Int {
