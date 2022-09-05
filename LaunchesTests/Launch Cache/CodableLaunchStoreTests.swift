@@ -10,9 +10,30 @@ import Launches
 
 class CodableLaunchStore {
     private struct Cache: Codable {
-        let launches: [LocalLaunchItem]
+        let launches: [CodableLocalLaunchItem]
         let timestamp: Date
+
+        var localLaunches: [LocalLaunchItem] {
+            return launches.map { $0.local }
+        }
     }
+
+    private struct CodableLocalLaunchItem: Codable {
+        private let id: Int
+        private let name: String
+        private let date: String
+
+        init(_ launch: LocalLaunchItem) {
+            id = launch.id
+            name = launch.name
+            date = launch.date
+        }
+
+        var local: LocalLaunchItem {
+            LocalLaunchItem(id: id, name: name, date: date)
+        }
+    }
+
 
     private let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("launches.store")
 
@@ -23,14 +44,15 @@ class CodableLaunchStore {
 
         let decoder = JSONDecoder()
         let cache = try! decoder.decode(Cache.self, from: data)
-        completion(.found(launches: cache.launches, timestamp: cache.timestamp))
+        completion(.found(launches: cache.localLaunches, timestamp: cache.timestamp))
     }
 
     func insert(_ launchItems: [LocalLaunchItem],
                 timestamp: Date,
                 completion: @escaping LaunchStore.InsertionCompletion) {
         let encoder = JSONEncoder()
-        let encoded = try! encoder.encode(Cache(launches: launchItems, timestamp: timestamp))
+        let cache = Cache(launches: launchItems.map(CodableLocalLaunchItem.init), timestamp: timestamp)
+        let encoded = try! encoder.encode(cache)
         try! encoded.write(to: storeURL)
         completion(nil)
     }

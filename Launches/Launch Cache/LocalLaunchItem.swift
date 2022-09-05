@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct LocalLaunchItem: Equatable, Codable {
+public struct LocalLaunchItem: Equatable {
     public let id: Int
     public let name: String
     public let date: String
