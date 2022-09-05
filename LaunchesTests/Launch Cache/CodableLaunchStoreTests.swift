@@ -144,7 +144,9 @@ class CodableLaunchStoreTests: XCTestCase {
 
     // - MARK: Helpers
 
-    private func makeSUT() -> CodableLaunchStore {
-        return CodableLaunchStore()
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableLaunchStore {
+        let sut = CodableLaunchStore()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
