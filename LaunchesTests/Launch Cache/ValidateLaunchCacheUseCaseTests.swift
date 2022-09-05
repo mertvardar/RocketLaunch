@@ -34,44 +34,45 @@ class ValidateLaunchCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
 
-    func test_validateCache_doesNotdeletesLessThanSevenDaysOldCache() {
+    func test_validateCache_doesNotdeletesOnNonExpiredCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        let nonExpiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(seconds: 1)
+
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         sut.validateCache()
-        store.completeRetrieval(with: localLaunches, timestamp: lessThanSevenDaysOldTimestamp)
+        store.completeRetrieval(with: localLaunches, timestamp: nonExpiredTimestamp)
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
 
-    func test_validateCache_deletesSevenDaysOldCache() {
+    func test_validateCache_deletesOnCacheExpiration() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
+        let expirationTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge()
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         sut.validateCache()
-        store.completeRetrieval(with: localLaunches, timestamp: sevenDaysOldTimestamp)
+        store.completeRetrieval(with: localLaunches, timestamp: expirationTimestamp)
 
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCacheLaunch])
     }
 
-    func test_validateCache_deletesMoreThanSevenDaysOldCache() {
+    func test_validateCache_deletesOnExpiredCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(days: -1)
+        let expiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(seconds: -1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         sut.validateCache()
-        store.completeRetrieval(with: localLaunches, timestamp: moreThanSevenDaysOldTimestamp)
+        store.completeRetrieval(with: localLaunches, timestamp: expiredTimestamp)
 
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCacheLaunch])
     }

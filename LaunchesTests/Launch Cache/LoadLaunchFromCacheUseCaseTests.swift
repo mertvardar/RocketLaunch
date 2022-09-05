@@ -72,7 +72,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let expiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(days: -1)
+        let expiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(seconds: -1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, toCompleteWtih: .success([])) {
@@ -131,7 +131,7 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let expiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(days: -1)
+        let expiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(seconds: -1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         sut.load { _ in }
