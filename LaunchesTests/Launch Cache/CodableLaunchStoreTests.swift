@@ -34,8 +34,11 @@ class CodableLaunchStore {
         }
     }
 
+    private let storeURL: URL
 
-    private let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("launches.store")
+    init(storeURL: URL) {
+        self.storeURL = storeURL
+    }
 
     func retrieve(completion: @escaping LaunchStore.RetrieveCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
@@ -145,7 +148,8 @@ class CodableLaunchStoreTests: XCTestCase {
     // - MARK: Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableLaunchStore {
-        let sut = CodableLaunchStore()
+        let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("launches.store")
+        let sut = CodableLaunchStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
