@@ -17,6 +17,10 @@ extension Date {
     }
 
     func minusLaunchCacheMaxAge() -> Date {
-        return adding(days: -7)
+        return adding(days: -launchCacheMaxAgeInDays)
+    }
+
+    private var launchCacheMaxAgeInDays: Int {
+        return 7
     }
 }
