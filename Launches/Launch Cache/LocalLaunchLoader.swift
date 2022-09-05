@@ -7,23 +7,34 @@
 
 import Foundation
 
-public final class LocalLaunchLoader: LaunchLoader {
-    private let store: LaunchStore
+private final class LaunchCachePolicy {
     private let currentDate: () -> Date
     private let calendar = Calendar(identifier: .gregorian)
 
-    public init(store: LaunchStore,
-                currentDate: @escaping () -> Date) {
-        self.store = store
+    init(currentDate: @escaping () -> Date) {
         self.currentDate = currentDate
     }
 
     private var maxCacheAgeInDays: Int {
         return 7
     }
-    private func validate(_ timestamp: Date) -> Bool {
+
+    func validate(_ timestamp: Date) -> Bool {
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else { return false }
         return currentDate() < maxCacheAge
+    }
+}
+
+public final class LocalLaunchLoader: LaunchLoader {
+    private let store: LaunchStore
+    private let currentDate: () -> Date
+    private let cachePolicy: LaunchCachePolicy
+
+    public init(store: LaunchStore,
+                currentDate: @escaping () -> Date) {
+        self.store = store
+        self.currentDate = currentDate
+        self.cachePolicy = LaunchCachePolicy(currentDate: currentDate)
     }
 }
 
@@ -53,7 +64,7 @@ extension LocalLaunchLoader {
 
 extension LocalLaunchLoader {
     public typealias LoadResult = LoadLaunchResult
-    
+
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
@@ -61,7 +72,7 @@ extension LocalLaunchLoader {
             switch result {
             case let .failure(error):
                 completion(.failure(error))
-            case let .found(launches, timestamp) where self.validate(timestamp):
+            case let .found(launches, timestamp) where self.cachePolicy.validate(timestamp):
                 completion(.success(launches.toModels()))
             case .found, .empty:
                 completion(.success([]))
@@ -77,7 +88,7 @@ extension LocalLaunchLoader {
             switch result {
             case .failure:
                 self.store.deleteCachedLaunches { _ in }
-            case let .found(_, timestamp) where !self.validate(timestamp):
+            case let .found(_, timestamp) where !self.cachePolicy.validate(timestamp):
                 self.store.deleteCachedLaunches { _ in }
             case .empty, .found: break
             }
