@@ -76,7 +76,7 @@ class CodableLaunchStoreTests: XCTestCase {
     }
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = CodableLaunchStore()
+        let sut = makeSUT()
 
         let exp = expectation(description: "Wait for completion")
         sut.retrieve { result in
@@ -95,7 +95,7 @@ class CodableLaunchStoreTests: XCTestCase {
     }
 
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-        let sut = CodableLaunchStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for completion")
 
         sut.retrieve { firstResult in
@@ -116,7 +116,7 @@ class CodableLaunchStoreTests: XCTestCase {
     }
 
     func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
-        let sut = CodableLaunchStore()
+        let sut = makeSUT()
         let givenLaunches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let givenLocalLaunches = givenLaunches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
@@ -140,5 +140,11 @@ class CodableLaunchStoreTests: XCTestCase {
         }
 
         wait(for: [exp], timeout: 1.0)
+    }
+
+    // - MARK: Helpers
+
+    private func makeSUT() -> CodableLaunchStore {
+        return CodableLaunchStore()
     }
 }
