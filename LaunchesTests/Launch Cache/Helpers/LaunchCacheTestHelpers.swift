@@ -15,4 +15,8 @@ extension Date {
     func adding(seconds: TimeInterval) -> Date {
         return self + seconds
     }
+
+    func minusLaunchCacheMaxAge() -> Date {
+        return adding(days: -7)
+    }
 }

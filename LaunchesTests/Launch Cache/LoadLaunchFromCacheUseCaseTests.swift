@@ -41,42 +41,42 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
         }
     }
 
-    func test_load_deliversCachedLaunchesOnLessThanSevenDaysOldCache() {
+    func test_load_deliversCachedLaunchesOnNonExpiredCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        let nonExpiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(seconds: 1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, toCompleteWtih: .success(launches)) {
-            store.completeRetrieval(with: localLaunches, timestamp: lessThanSevenDaysOldTimestamp)
+            store.completeRetrieval(with: localLaunches, timestamp: nonExpiredTimestamp)
         }
     }
 
-    func test_load_deliversNoLaunchesSevenDaysOldCache() {
+    func test_load_deliversNoLaunchesOnCacheExpiration() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
+        let expirationTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge()
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, toCompleteWtih: .success([])) {
-            store.completeRetrieval(with: localLaunches, timestamp: sevenDaysOldTimestamp)
+            store.completeRetrieval(with: localLaunches, timestamp: expirationTimestamp)
         }
     }
 
-    func test_load_deliversNoLaunchesMoreThanSevenDaysOldCache() {
+    func test_load_deliversNoLaunchesOnExpiredCache() {
         let launches = [LaunchItem(id: 1, name: "1", date: "1"),
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(days: -1)
+        let expiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(days: -1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, toCompleteWtih: .success([])) {
-            store.completeRetrieval(with: localLaunches, timestamp: moreThanSevenDaysOldTimestamp)
+            store.completeRetrieval(with: localLaunches, timestamp: expiredTimestamp)
         }
     }
 
@@ -103,11 +103,11 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        let nonExpiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(seconds: 1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         sut.load { _ in }
-        store.completeRetrieval(with: localLaunches, timestamp: lessThanSevenDaysOldTimestamp)
+        store.completeRetrieval(with: localLaunches, timestamp: nonExpiredTimestamp)
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -117,11 +117,11 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
+        let expirationTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge()
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         sut.load { _ in }
-        store.completeRetrieval(with: localLaunches, timestamp: sevenDaysOldTimestamp)
+        store.completeRetrieval(with: localLaunches, timestamp: expirationTimestamp)
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -131,11 +131,11 @@ class LoadLaunchFromCacheUseCaseTests: XCTestCase {
                         LaunchItem(id: 2, name: "2", date: "2")]
         let localLaunches = launches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let fixedCurrentDate = Date()
-        let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(days: -1)
+        let expiredTimestamp = fixedCurrentDate.minusLaunchCacheMaxAge().adding(days: -1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         sut.load { _ in }
-        store.completeRetrieval(with: localLaunches, timestamp: moreThanSevenDaysOldTimestamp)
+        store.completeRetrieval(with: localLaunches, timestamp: expiredTimestamp)
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
