@@ -143,6 +143,38 @@ class CodableLaunchStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
+        let sut = makeSUT()
+        let givenLaunches = [LaunchItem(id: 1, name: "1", date: "1"),
+                             LaunchItem(id: 2, name: "2", date: "2")]
+        let givenLocalLaunches = givenLaunches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
+        let givenTimestamp = Date()
+        let exp = expectation(description: "Wait for completion")
+
+        sut.insert(givenLocalLaunches, timestamp: givenTimestamp) { insertionError in
+            XCTAssertNil(insertionError, "Expected launches to be inserted successfully")
+
+            sut.retrieve { firstResult in
+                sut.retrieve { secondResult in
+                    switch (firstResult, secondResult) {
+                    case let (.found(firstFound), .found(secondFound)):
+                        XCTAssertEqual(firstFound.launches, givenLocalLaunches)
+                        XCTAssertEqual(firstFound.timestamp, givenTimestamp)
+
+                        XCTAssertEqual(secondFound.launches, givenLocalLaunches)
+                        XCTAssertEqual(secondFound.timestamp, givenTimestamp)
+                    default:
+                        XCTFail("Expected \(firstResult) and \(secondResult) to be equal bu they're not")
+                    }
+                }
+
+                exp.fulfill()
+            }
+        }
+
+        wait(for: [exp], timeout: 1.0)
+    }
+
     // - MARK: Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableLaunchStore {
