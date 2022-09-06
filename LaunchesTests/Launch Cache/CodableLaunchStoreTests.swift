@@ -84,23 +84,8 @@ class CodableLaunchStoreTests: XCTestCase {
 
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for completion")
 
-        sut.retrieve { firstResult in
-            sut.retrieve { secondResult in
-                switch (firstResult, secondResult) {
-                case (.empty, .empty):
-                    break
-
-                default:
-                    XCTFail("Expected both empty result, got \(firstResult) and \(secondResult) instead")
-                }
-
-                exp.fulfill()
-            }
-        }
-
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toRetrieveTwice: .empty)
     }
 
     func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
@@ -130,26 +115,11 @@ class CodableLaunchStoreTests: XCTestCase {
 
         sut.insert(givenLocalLaunches, timestamp: givenTimestamp) { insertionError in
             XCTAssertNil(insertionError, "Expected launches to be inserted successfully")
-
-            sut.retrieve { firstResult in
-                sut.retrieve { secondResult in
-                    switch (firstResult, secondResult) {
-                    case let (.found(firstFound), .found(secondFound)):
-                        XCTAssertEqual(firstFound.launches, givenLocalLaunches)
-                        XCTAssertEqual(firstFound.timestamp, givenTimestamp)
-
-                        XCTAssertEqual(secondFound.launches, givenLocalLaunches)
-                        XCTAssertEqual(secondFound.timestamp, givenTimestamp)
-                    default:
-                        XCTFail("Expected \(firstResult) and \(secondResult) to be equal bu they're not")
-                    }
-                }
-
-                exp.fulfill()
-            }
+            exp.fulfill()
         }
-
         wait(for: [exp], timeout: 1.0)
+
+        expect(sut, toRetrieve: .found(launches: givenLocalLaunches, timestamp: givenTimestamp))
     }
 
     // - MARK: Helpers
@@ -178,6 +148,11 @@ class CodableLaunchStoreTests: XCTestCase {
         }
 
         wait(for: [exp], timeout: 1.0)
+    }
+
+    private func expect(_ sut: CodableLaunchStore, toRetrieveTwice expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
+        expect(sut, toRetrieve: expectedResult)
+        expect(sut, toRetrieve: expectedResult)
     }
 
     func testSpecificStoreURL() -> URL {
