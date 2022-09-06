@@ -68,6 +68,18 @@ class CodableLaunchStore {
         }
     }
 
+    func deleteCachedLaunches(completion: @escaping LaunchStore.DeletionCompletion) {
+        guard FileManager.default.fileExists(atPath: storeURL.path) else {
+            return completion(nil)
+        }
+
+        do {
+            try FileManager.default.removeItem(at: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
+    }
 }
 
 class CodableLaunchStoreTests: XCTestCase {
@@ -160,6 +172,37 @@ class CodableLaunchStoreTests: XCTestCase {
         XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error")
     }
 
+    func test_deletion_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+
+        let deletionError = delete(from: sut)
+        XCTAssertNil(deletionError, "Expected cache deletion not to fail")
+
+        expect(sut, toRetrieve: .empty)
+    }
+
+    func test_deletion_emptiesPreviouslyInsertedCache() {
+        let sut = makeSUT(storeURL: testSpecificStoreURL())
+
+        let insertedCache = ([LocalLaunchItem(id: 1, name: "1", date: "1")], Date())
+        let insertionError = insert(insertedCache, to: sut)
+        XCTAssertNil(insertionError, "Expected no error on insertion")
+
+        let deletionError = delete(from: sut)
+        XCTAssertNil(deletionError, "Expected cache deletion not to fail")
+
+        expect(sut, toRetrieve: .empty)
+    }
+
+    func test_delete_deliversErrorOnDeletionError() {
+        let noDeletePermissionURL = cachesDirectory()
+        let sut = makeSUT(storeURL: noDeletePermissionURL)
+
+        let deletionError = delete(from: sut)
+
+        XCTAssertNotNil(deletionError, "Expected cache deletion to fail")
+    }
+
     // - MARK: Helpers
 
     private func makeSUT(storeURL: URL? = nil,
@@ -167,6 +210,19 @@ class CodableLaunchStoreTests: XCTestCase {
         let sut = CodableLaunchStore(storeURL: storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    @discardableResult
+    private func delete(from sut: CodableLaunchStore) -> Error? {
+        let exp = expectation(description: "Wait for deletion")
+
+        var deletionError: Error?
+        sut.deleteCachedLaunches { receivedDeletionError in
+            deletionError = receivedDeletionError
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        return deletionError
     }
 
     @discardableResult
@@ -206,8 +262,12 @@ class CodableLaunchStoreTests: XCTestCase {
         expect(sut, toRetrieve: expectedResult)
     }
 
-    func testSpecificStoreURL() -> URL {
-        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
+    private func testSpecificStoreURL() -> URL {
+        return cachesDirectory().appendingPathComponent("\(type(of: self)).store")
+    }
+
+    private func cachesDirectory() -> URL {
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
 
     private func setupEmptyStoreState() {
