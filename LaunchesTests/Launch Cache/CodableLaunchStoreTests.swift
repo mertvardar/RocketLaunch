@@ -8,6 +8,39 @@
 import XCTest
 import Launches
 
+protocol LaunchStoreSpecs {
+    func test_retrieve_deliversEmptyOnEmptyCache()
+    func test_retrieve_hasNoSideEffectsOnEmptyCache()
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache()
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache()
+
+    func test_insert_deliversNoErrorOnEmptyCache()
+    func test_insert_deliversNoErrorOnNonEmptyCache()
+    func test_insert_overridesPreviouslyInsertedCacheValues()
+
+    func test_delete_deliversNoErrorOnEmptyCache()
+    func test_delete_hasNoSideEffectsOnEmptyCache()
+    func test_delete_deliversNoErrorOnNonEmptyCache()
+    func test_deletion_emptiesPreviouslyInsertedCache()
+
+    func test_storeSideEffects_runSerially()
+}
+
+protocol FailableRetrieveLaunchSpecs {
+    func test_retrieve_deliversFailureOnRetrievalError()
+    func test_retrieve_deliversFailureTwiceOnRetrievalError()
+}
+
+protocol FailableInsertLaunchSpecs {
+    func test_insert_deliversErrorOnInsertionError()
+    func test_insert_hasNoSideEffectsOnInsertionError()
+}
+
+protocol FailableDeleteLaunchSpecs {
+    func test_delete_deliversErrorOnDeletionError()
+    func test_delete_hasNoSideEffectsOnDeletionError()
+}
+
 class CodableLaunchStoreTests: XCTestCase {
 
     override func setUp() {
@@ -98,7 +131,55 @@ class CodableLaunchStoreTests: XCTestCase {
         XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error")
     }
 
-    func test_deletion_hasNoSideEffectsOnEmptyCache() {
+    func test_insert_deliversNoErrorOnNonEmptyCache() {
+        let sut = makeSUT()
+
+        let firstInsertedCache = (launches: [LocalLaunchItem(id: 1, name: "1", date: "1")], timestamp: Date())
+        insert(firstInsertedCache, to: sut)
+
+        let latestInsertedCache = (launches: [LocalLaunchItem(id: 2, name: "2", date: "2")], timestamp: Date())
+        let latestInsertionError = insert(latestInsertedCache, to: sut)
+        XCTAssertNil(latestInsertionError, "Expected to insert cache successfully")
+    }
+
+    func test_insert_deliversNoErrorOnEmptyCache() {
+        let sut = makeSUT()
+        let cache = (launches: [LocalLaunchItem(id: 1, name: "1", date: "1")], timestamp: Date())
+
+        let insertionError = insert(cache, to: sut)
+
+        XCTAssertNil(insertionError, "Expected cache insertion error to be nil")
+    }
+
+    func test_insert_hasNoSideEffectsOnInsertionError() {
+        let invalidStoreURL = URL(string: "invalid.url")!
+        let sut = makeSUT(storeURL: invalidStoreURL)
+        let cache = (launches: [LocalLaunchItem(id: 1, name: "1", date: "1")], timestamp: Date())
+
+        insert(cache, to: sut)
+
+        expect(sut, toRetrieve: .empty)
+    }
+
+    func test_delete_deliversNoErrorOnNonEmptyCache() {
+        let sut = makeSUT()
+        let cache = (launches: [LocalLaunchItem(id: 1, name: "1", date: "1")], timestamp: Date())
+
+        insert(cache, to: sut)
+
+        let deletionError = delete(from: sut)
+
+        XCTAssertNil(deletionError, "Expected deletionError to be nil")
+    }
+
+    func test_delete_deliversNoErrorOnEmptyCache() {
+        let sut = makeSUT()
+
+        let deletionError = delete(from: sut)
+        XCTAssertNil(deletionError, "Expected cache deletion not to fail")
+    }
+
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
 
         let deletionError = delete(from: sut)
@@ -127,6 +208,14 @@ class CodableLaunchStoreTests: XCTestCase {
         let deletionError = delete(from: sut)
 
         XCTAssertNotNil(deletionError, "Expected cache deletion to fail")
+    }
+
+    func test_delete_hasNoSideEffectsOnDeletionError() {
+        let noDeletePermissionURL = cachesDirectory()
+        let sut = makeSUT(storeURL: noDeletePermissionURL)
+
+        delete(from: sut)
+        expect(sut, toRetrieve: .empty)
     }
 
     func test_storeSideEffects_runSerially() {
