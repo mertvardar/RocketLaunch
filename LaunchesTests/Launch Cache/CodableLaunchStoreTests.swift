@@ -222,56 +222,6 @@ class CodableLaunchStoreTests: XCTestCase, FailableLaunchStore {
         return sut
     }
 
-    @discardableResult
-    private func delete(from sut: LaunchStore) -> Error? {
-        let exp = expectation(description: "Wait for deletion")
-
-        var deletionError: Error?
-        sut.deleteCachedLaunches { receivedDeletionError in
-            deletionError = receivedDeletionError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 5.0)
-        return deletionError
-    }
-
-    @discardableResult
-    private func insert(_ cache: (launches: [LocalLaunchItem], timestamp: Date), to sut: LaunchStore) -> Error? {
-        let exp = expectation(description: "Wait for cache insertion")
-        var insertionError: Error?
-        sut.insert(cache.launches, timestamp: cache.timestamp) { receivedInsertionError in
-            insertionError = receivedInsertionError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-        return insertionError
-    }
-
-    private func expect(_ sut: LaunchStore, toRetrieve expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
-        let exp = expectation(description: "Wait for cache retrieval")
-
-        sut.retrieve { retrievedResult in
-            switch (expectedResult, retrievedResult) {
-            case (.empty, .empty), (.failure, .failure):
-                break
-            case let (.found(expected), .found(retrieved)):
-                XCTAssertEqual(retrieved.launches, expected.launches, file: file, line: line)
-                XCTAssertEqual(retrieved.timestamp, expected.timestamp, file: file, line: line)
-            default:
-                XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead", file: file, line: line)
-            }
-
-            exp.fulfill()
-        }
-
-        wait(for: [exp], timeout: 1.0)
-    }
-
-    private func expect(_ sut: LaunchStore, toRetrieveTwice expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: expectedResult)
-        expect(sut, toRetrieve: expectedResult)
-    }
-
     private func testSpecificStoreURL() -> URL {
         return cachesDirectory().appendingPathComponent("\(type(of: self)).store")
     }
