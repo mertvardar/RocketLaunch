@@ -33,7 +33,7 @@ public class CodableLaunchStore: LaunchStore {
         }
     }
 
-    private let queue = DispatchQueue(label: "\(CodableLaunchStore.self)Queue", qos: .userInitiated)
+    private let queue = DispatchQueue(label: "\(CodableLaunchStore.self)Queue", qos: .userInitiated, attributes: .concurrent)
     private let storeURL: URL
 
     public init(storeURL: URL) {
@@ -61,7 +61,7 @@ public class CodableLaunchStore: LaunchStore {
                        timestamp: Date,
                        completion: @escaping InsertionCompletion) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             do {
                 let encoder = JSONEncoder()
                 let cache = Cache(launches: launchItems.map(CodableLocalLaunchItem.init), timestamp: timestamp)
@@ -76,7 +76,7 @@ public class CodableLaunchStore: LaunchStore {
 
     public func deleteCachedLaunches(completion: @escaping DeletionCompletion) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             guard FileManager.default.fileExists(atPath: storeURL.path) else {
                 return completion(nil)
             }
