@@ -206,14 +206,14 @@ class CodableLaunchStoreTests: XCTestCase {
     // - MARK: Helpers
 
     private func makeSUT(storeURL: URL? = nil,
-                         file: StaticString = #file, line: UInt = #line) -> CodableLaunchStore {
+                         file: StaticString = #file, line: UInt = #line) -> LaunchStore {
         let sut = CodableLaunchStore(storeURL: storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
 
     @discardableResult
-    private func delete(from sut: CodableLaunchStore) -> Error? {
+    private func delete(from sut: LaunchStore) -> Error? {
         let exp = expectation(description: "Wait for deletion")
 
         var deletionError: Error?
@@ -226,7 +226,7 @@ class CodableLaunchStoreTests: XCTestCase {
     }
 
     @discardableResult
-    private func insert(_ cache: (launches: [LocalLaunchItem], timestamp: Date), to sut: CodableLaunchStore) -> Error? {
+    private func insert(_ cache: (launches: [LocalLaunchItem], timestamp: Date), to sut: LaunchStore) -> Error? {
         let exp = expectation(description: "Wait for cache insertion")
         var insertionError: Error?
         sut.insert(cache.launches, timestamp: cache.timestamp) { receivedInsertionError in
@@ -237,7 +237,7 @@ class CodableLaunchStoreTests: XCTestCase {
         return insertionError
     }
 
-    private func expect(_ sut: CodableLaunchStore, toRetrieve expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LaunchStore, toRetrieve expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for cache retrieval")
 
         sut.retrieve { retrievedResult in
@@ -257,7 +257,7 @@ class CodableLaunchStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
-    private func expect(_ sut: CodableLaunchStore, toRetrieveTwice expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LaunchStore, toRetrieveTwice expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult)
         expect(sut, toRetrieve: expectedResult)
     }
