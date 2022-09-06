@@ -8,7 +8,7 @@
 import XCTest
 import Launches
 
-class CodableLaunchStore {
+class CodableLaunchStore: LaunchStore {
     private struct Cache: Codable {
         let launches: [CodableLocalLaunchItem]
         let timestamp: Date
@@ -40,7 +40,7 @@ class CodableLaunchStore {
         self.storeURL = storeURL
     }
 
-    func retrieve(completion: @escaping LaunchStore.RetrieveCompletion) {
+    func retrieve(completion: @escaping RetrieveCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.empty)
         }
@@ -56,7 +56,7 @@ class CodableLaunchStore {
 
     func insert(_ launchItems: [LocalLaunchItem],
                 timestamp: Date,
-                completion: @escaping LaunchStore.InsertionCompletion) {
+                completion: @escaping InsertionCompletion) {
         do {
             let encoder = JSONEncoder()
             let cache = Cache(launches: launchItems.map(CodableLocalLaunchItem.init), timestamp: timestamp)
@@ -68,7 +68,7 @@ class CodableLaunchStore {
         }
     }
 
-    func deleteCachedLaunches(completion: @escaping LaunchStore.DeletionCompletion) {
+    func deleteCachedLaunches(completion: @escaping DeletionCompletion) {
         guard FileManager.default.fileExists(atPath: storeURL.path) else {
             return completion(nil)
         }
