@@ -45,9 +45,13 @@ class CodableLaunchStore {
             return completion(.empty)
         }
 
-        let decoder = JSONDecoder()
-        let cache = try! decoder.decode(Cache.self, from: data)
-        completion(.found(launches: cache.localLaunches, timestamp: cache.timestamp))
+        do {
+            let decoder = JSONDecoder()
+            let cache = try decoder.decode(Cache.self, from: data)
+            completion(.found(launches: cache.localLaunches, timestamp: cache.timestamp))
+        } catch {
+            completion(.failure(error))
+        }
     }
 
     func insert(_ launchItems: [LocalLaunchItem],
@@ -110,6 +114,14 @@ class CodableLaunchStoreTests: XCTestCase {
         expect(sut, toRetrieve: .found(launches: givenLocalLaunches, timestamp: givenTimestamp))
     }
 
+    func test_retrieve_deliversFailureOnRetrievalError() {
+        let sut = makeSUT()
+
+        try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+
+        expect(sut, toRetrieve: .failure(anyNSError()))
+    }
+
     // - MARK: Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableLaunchStore {
@@ -133,7 +145,7 @@ class CodableLaunchStoreTests: XCTestCase {
 
         sut.retrieve { retrievedResult in
             switch (expectedResult, retrievedResult) {
-            case (.empty, .empty):
+            case (.empty, .empty), (.failure, .failure):
                 break
             case let (.found(expected), .found(retrieved)):
                 XCTAssertEqual(retrieved.launches, expected.launches, file: file, line: line)
