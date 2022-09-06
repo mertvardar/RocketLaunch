@@ -94,14 +94,8 @@ class CodableLaunchStoreTests: XCTestCase {
                         LaunchItem(id: 2, name: "2", date: "2")]
         let givenLocalLaunches = givenLaunches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let givenTimestamp = Date()
-        let exp = expectation(description: "Wait for completion")
 
-        sut.insert(givenLocalLaunches, timestamp: givenTimestamp) { insertionError in
-            XCTAssertNil(insertionError, "Expected launches to be inserted successfully")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-
+        insert((givenLocalLaunches, givenTimestamp), to: sut)
         expect(sut, toRetrieve: .found(launches: givenLocalLaunches, timestamp: givenTimestamp))
     }
 
@@ -111,14 +105,8 @@ class CodableLaunchStoreTests: XCTestCase {
                              LaunchItem(id: 2, name: "2", date: "2")]
         let givenLocalLaunches = givenLaunches.map { LocalLaunchItem(id: $0.id, name: $0.name, date: $0.date) }
         let givenTimestamp = Date()
-        let exp = expectation(description: "Wait for completion")
 
-        sut.insert(givenLocalLaunches, timestamp: givenTimestamp) { insertionError in
-            XCTAssertNil(insertionError, "Expected launches to be inserted successfully")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-
+        insert((givenLocalLaunches, givenTimestamp), to: sut)
         expect(sut, toRetrieve: .found(launches: givenLocalLaunches, timestamp: givenTimestamp))
     }
 
@@ -128,6 +116,16 @@ class CodableLaunchStoreTests: XCTestCase {
         let sut = CodableLaunchStore(storeURL: testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    private func insert(_ cache: (launches: [LocalLaunchItem], timestamp: Date), to sut: CodableLaunchStore) {
+        let exp = expectation(description: "Wait for cache insertion")
+
+        sut.insert(cache.launches, timestamp: cache.timestamp) { insertionError in
+            XCTAssertNil(insertionError, "Expected launches to be inserted successfully")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
     }
 
     private func expect(_ sut: CodableLaunchStore, toRetrieve expectedResult: RetrieveCachedLaunchResult, file: StaticString = #file, line: UInt = #line) {
