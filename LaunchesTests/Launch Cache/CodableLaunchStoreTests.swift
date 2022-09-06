@@ -57,11 +57,15 @@ class CodableLaunchStore {
     func insert(_ launchItems: [LocalLaunchItem],
                 timestamp: Date,
                 completion: @escaping LaunchStore.InsertionCompletion) {
-        let encoder = JSONEncoder()
-        let cache = Cache(launches: launchItems.map(CodableLocalLaunchItem.init), timestamp: timestamp)
-        let encoded = try! encoder.encode(cache)
-        try! encoded.write(to: storeURL)
-        completion(nil)
+        do {
+            let encoder = JSONEncoder()
+            let cache = Cache(launches: launchItems.map(CodableLocalLaunchItem.init), timestamp: timestamp)
+            let encoded = try encoder.encode(cache)
+            try encoded.write(to: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
 
 }
@@ -144,6 +148,16 @@ class CodableLaunchStoreTests: XCTestCase {
         XCTAssertNil(latestInsertionError, "Expected to insert cache successfully")
 
         expect(sut, toRetrieve: .found(launches: latestInsertedCache.launches, timestamp: latestInsertedCache.timestamp))
+    }
+
+    func test_insert_deliversErrorOnInsertionError() {
+        let invalidStoreURL = URL(string: "invalid.url")!
+        let sut = makeSUT(storeURL: invalidStoreURL)
+        let cache = (launches: [LocalLaunchItem(id: 1, name: "1", date: "1")], timestamp: Date())
+
+        let insertionError = insert(cache, to: sut)
+
+        XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error")
     }
 
     // - MARK: Helpers
