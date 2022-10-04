@@ -10,9 +10,11 @@ import CoreData
 public final class CoreDataLaunchStore: LaunchStore {
 
     private let container: NSPersistentContainer
+    private let context: NSManagedObjectContext
 
     public init(bundle: Bundle = .main) throws {
         container = try NSPersistentContainer.load(modelName: "LaunchStore", in: bundle)
+        context = container.newBackgroundContext()
     }
 
     public func retrieve(completion: @escaping RetrieveCompletion) {
