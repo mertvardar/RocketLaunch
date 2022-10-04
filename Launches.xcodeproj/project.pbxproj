@@ -42,6 +42,7 @@
 		6EC1649028ECB22600D72C4E /* CoreDataLaunchStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1648F28ECB22600D72C4E /* CoreDataLaunchStoreTests.swift */; };
 		6EC1649228ECB41600D72C4E /* CoreDataLaunchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1649128ECB41600D72C4E /* CoreDataLaunchStore.swift */; };
 		6EC1649528ECB4F200D72C4E /* LaunchStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1649328ECB4F200D72C4E /* LaunchStore.xcdatamodeld */; };
+		6EC1649628ECBA8D00D72C4E /* LaunchStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1649328ECB4F200D72C4E /* LaunchStore.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -436,6 +437,7 @@
 				6E8654B928C8B8FB0050EE49 /* XCTestCase+FailableRetrieveLaunchStoreSpecs.swift in Sources */,
 				6E1EE4CC28B11B57005E5544 /* URLSessionHTTPClientTests.swift in Sources */,
 				6E8654A528C54F320050EE49 /* ValidateLaunchCacheUseCaseTests.swift in Sources */,
+				6EC1649628ECBA8D00D72C4E /* LaunchStore.xcdatamodeld in Sources */,
 				6E8654B328C7DF480050EE49 /* XCTestCase+LaunchStoreSpecs.swift in Sources */,
 				6E1EE4CF28B17F71005E5544 /* XCTTestCase+MemoryLeakTracking.swift in Sources */,
 				6E8ED0E428B0126E00C734D4 /* RemoteLaunchLoaderTests.swift in Sources */,

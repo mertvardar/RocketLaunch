@@ -64,7 +64,9 @@ class CoreDataLaunchStoreTests: XCTestCase, LaunchStoreSpecs {
 
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> LaunchStore {
-        let sut = CoreDataLaunchStore()
+        let storeBundle = Bundle(for: CoreDataLaunchStoreTests.self)
+        let sut = try! CoreDataLaunchStore(bundle: storeBundle)
+
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
