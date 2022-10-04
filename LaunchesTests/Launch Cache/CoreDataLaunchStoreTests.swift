@@ -6,10 +6,14 @@
 //
 
 import XCTest
+import Launches
 
 class CoreDataLaunchStoreTests: XCTestCase, LaunchStoreSpecs {
-    func test_retrieve_deliversEmptyOnEmptyCache() {
 
+    func test_retrieve_deliversEmptyOnEmptyCache() {
+        let sut = makeSUT()
+
+        assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
 
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
@@ -54,5 +58,12 @@ class CoreDataLaunchStoreTests: XCTestCase, LaunchStoreSpecs {
 
     func test_storeSideEffects_runSerially() {
 
+    }
+
+    // MARK: - Helpers
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> LaunchStore {
+        let sut = CoreDataLaunchStore()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
