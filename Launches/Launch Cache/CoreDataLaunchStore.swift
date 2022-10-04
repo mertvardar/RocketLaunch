@@ -18,11 +18,46 @@ public final class CoreDataLaunchStore: LaunchStore {
     }
 
     public func retrieve(completion: @escaping RetrieveCompletion) {
-        completion(.empty)
+        let context = self.context
+        context.perform {
+            do {
+                let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
+                request.returnsObjectsAsFaults = false
+
+                if let cache = try context.fetch(request).first {
+                    completion(.found(launches: cache.launches
+                        .compactMap { ($0 as? ManagedLaunch)}
+                        .map { LocalLaunchItem(id: Int($0.id), name: $0.name, date: $0.dateString)},
+                                      timestamp: cache.timestamp))
+                } else {
+                    completion(.empty)
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 
     public func insert(_ launchItems: [LocalLaunchItem], timestamp: Date, completion: @escaping InsertionCompletion) {
+        let context = self.context
+        context.perform {
+            do {
+                let managedCache = ManagedCache(context: context)
+                managedCache.timestamp = timestamp
+                managedCache.launches = NSOrderedSet(array: launchItems.map { localLaunch in
+                    let managed = ManagedLaunch(context: context)
+                    managed.id = Int64(localLaunch.id)
+                    managed.name = localLaunch.name
+                    managed.dateString = localLaunch.date
+                    return managed
+                })
 
+                try context.save()
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
     }
 
     public func deleteCachedLaunches(completion: @escaping DeletionCompletion) {
@@ -61,11 +96,13 @@ private extension NSManagedObjectModel {
     }
 }
 
+@objc(ManagedCache)
 private class ManagedCache: NSManagedObject {
     @NSManaged var timestamp: Date
     @NSManaged var launches: NSOrderedSet
 }
 
+@objc(ManagedLaunch)
 private class ManagedLaunch: NSManagedObject {
     @NSManaged var id: Int64
     @NSManaged var name: String
