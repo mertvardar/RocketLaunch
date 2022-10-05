@@ -49,7 +49,7 @@ public final class CoreDataLaunchStore: LaunchStore {
     }
 
     public func deleteCachedLaunches(completion: @escaping DeletionCompletion) {
-
+        completion(nil)
     }
 }
 
