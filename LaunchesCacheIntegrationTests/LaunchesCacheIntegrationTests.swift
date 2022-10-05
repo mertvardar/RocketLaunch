@@ -38,6 +38,31 @@ class LaunchesCacheIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
+    func test_load_deliversItemsSavedOnASeparateInstance() {
+        let sutToPerformSave = makeSUT()
+        let sutToPerformLoad = makeSUT()
+        let launches = [LaunchItem(id: 1, name: "Launch", date: "Today")]
+
+        let saveExp = expectation(description: "Wait for save completion")
+        sutToPerformSave.save(launches) { saveError in
+            XCTAssertNil(saveError, "Expected to save launches successfully")
+            saveExp.fulfill()
+        }
+        wait(for: [saveExp], timeout: 1.0)
+
+        let loadExp = expectation(description: "Wait for load completion")
+        sutToPerformLoad.load { loadResult in
+            switch loadResult {
+            case let .success(launches):
+                XCTAssertEqual(launches, launches)
+            case let .failure(error):
+                XCTFail("Expected successfull launches result, got \(error) instead")
+            }
+            loadExp.fulfill()
+        }
+        wait(for: [loadExp], timeout: 1.0)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> LocalLaunchLoader {
