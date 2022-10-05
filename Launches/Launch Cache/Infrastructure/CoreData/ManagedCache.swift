@@ -11,7 +11,9 @@ import CoreData
 internal class ManagedCache: NSManagedObject {
     @NSManaged var timestamp: Date
     @NSManaged var launches: NSOrderedSet
+}
 
+extension ManagedCache {
     var localLaunches: [LocalLaunchItem] {
         return launches.compactMap { ($0 as? ManagedLaunch)?.local}
     }

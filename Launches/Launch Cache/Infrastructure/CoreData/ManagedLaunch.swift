@@ -13,7 +13,9 @@ internal class ManagedLaunch: NSManagedObject {
     @NSManaged var name: String
     @NSManaged var dateString: String
     @NSManaged var cache: ManagedCache
+}
 
+extension ManagedLaunch {
     var local: LocalLaunchItem {
         return LocalLaunchItem(id: Int(id), name: name, date: dateString)
     }
