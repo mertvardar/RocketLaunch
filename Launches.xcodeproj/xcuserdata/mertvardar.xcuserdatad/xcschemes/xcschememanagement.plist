@@ -7,17 +7,22 @@
 		<key>CI.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Launches.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</dict>
 		<key>LaunchesAPIEndToEndTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>LaunchesCacheIntegrationTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -28,6 +33,11 @@
 			<true/>
 		</dict>
 		<key>6E8ED0CD28B0101B00C734D4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6EC164A328EE00A300D72C4E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
