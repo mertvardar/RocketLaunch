@@ -36,7 +36,7 @@ public final class CoreDataLaunchStore: LaunchStore {
         let context = self.context
         context.perform {
             do {
-                let managedCache = ManagedCache(context: context)
+                let managedCache = try ManagedCache.newUniqueInstance(in: context)
                 managedCache.timestamp = timestamp
                 managedCache.launches = ManagedLaunch.launches(from: launchItems, in: context)
 
@@ -91,6 +91,11 @@ private class ManagedCache: NSManagedObject {
 
     var localLaunches: [LocalLaunchItem] {
         return launches.compactMap { ($0 as? ManagedLaunch)?.local}
+    }
+
+    static func newUniqueInstance(in context: NSManagedObjectContext) throws -> ManagedCache {
+        try find(in: context).map(context.delete)
+        return ManagedCache(context: context)
     }
 
     static func find(in context: NSManagedObjectContext) throws -> ManagedCache? {
