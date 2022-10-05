@@ -156,12 +156,11 @@
 		6E86549628BE934C0050EE49 /* Launch Cache */ = {
 			isa = PBXGroup;
 			children = (
+				6EC1649728EDEFC700D72C4E /* Infrastructure */,
 				6E86549728BE93700050EE49 /* LocalLaunchLoader.swift */,
 				6E86549928BE937B0050EE49 /* LaunchStore.swift */,
 				6E86549D28BEB0900050EE49 /* LocalLaunchItem.swift */,
 				6E8654AA28C62DE50050EE49 /* LaunchCachePolicy.swift */,
-				6E8654AE28C7ABF40050EE49 /* CodableLaunchStore.swift */,
-				6EC1649128ECB41600D72C4E /* CoreDataLaunchStore.swift */,
 				6EC1649328ECB4F200D72C4E /* LaunchStore.xcdatamodeld */,
 			);
 			path = "Launch Cache";
@@ -254,6 +253,31 @@
 				6EC1648F28ECB22600D72C4E /* CoreDataLaunchStoreTests.swift */,
 			);
 			path = "Launch Cache";
+			sourceTree = "<group>";
+		};
+		6EC1649728EDEFC700D72C4E /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				6EC1649828EDEFD200D72C4E /* Codable */,
+				6EC1649928EDEFD700D72C4E /* CoreData */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		6EC1649828EDEFD200D72C4E /* Codable */ = {
+			isa = PBXGroup;
+			children = (
+				6E8654AE28C7ABF40050EE49 /* CodableLaunchStore.swift */,
+			);
+			path = Codable;
+			sourceTree = "<group>";
+		};
+		6EC1649928EDEFD700D72C4E /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				6EC1649128ECB41600D72C4E /* CoreDataLaunchStore.swift */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
