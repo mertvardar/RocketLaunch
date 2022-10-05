@@ -25,10 +25,7 @@ public final class CoreDataLaunchStore: LaunchStore {
                 request.returnsObjectsAsFaults = false
 
                 if let cache = try context.fetch(request).first {
-                    completion(.found(launches: cache.launches
-                        .compactMap { ($0 as? ManagedLaunch)}
-                        .map { LocalLaunchItem(id: Int($0.id), name: $0.name, date: $0.dateString)},
-                                      timestamp: cache.timestamp))
+                    completion(.found(launches: cache.localLaunches, timestamp: cache.timestamp))
                 } else {
                     completion(.empty)
                 }
@@ -44,13 +41,7 @@ public final class CoreDataLaunchStore: LaunchStore {
             do {
                 let managedCache = ManagedCache(context: context)
                 managedCache.timestamp = timestamp
-                managedCache.launches = NSOrderedSet(array: launchItems.map { localLaunch in
-                    let managed = ManagedLaunch(context: context)
-                    managed.id = Int64(localLaunch.id)
-                    managed.name = localLaunch.name
-                    managed.dateString = localLaunch.date
-                    return managed
-                })
+                managedCache.launches = ManagedLaunch.launches(from: launchItems, in: context)
 
                 try context.save()
                 completion(nil)
@@ -100,6 +91,10 @@ private extension NSManagedObjectModel {
 private class ManagedCache: NSManagedObject {
     @NSManaged var timestamp: Date
     @NSManaged var launches: NSOrderedSet
+
+    var localLaunches: [LocalLaunchItem] {
+        return launches.compactMap { ($0 as? ManagedLaunch)?.local}
+    }
 }
 
 @objc(ManagedLaunch)
@@ -108,4 +103,18 @@ private class ManagedLaunch: NSManagedObject {
     @NSManaged var name: String
     @NSManaged var dateString: String
     @NSManaged var cache: ManagedCache
+
+    var local: LocalLaunchItem {
+        return LocalLaunchItem(id: Int(id), name: name, date: dateString)
+    }
+
+    static func launches(from localLaunches: [LocalLaunchItem], in context: NSManagedObjectContext) -> NSOrderedSet {
+        return NSOrderedSet(array: localLaunches.map { local in
+            let managed = ManagedLaunch(context: context)
+            managed.id = Int64(local.id)
+            managed.name = local.name
+            managed.dateString = local.date
+            return managed
+        })
+    }
 }
