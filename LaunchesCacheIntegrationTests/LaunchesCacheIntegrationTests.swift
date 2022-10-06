@@ -31,12 +31,7 @@ class LaunchesCacheIntegrationTests: XCTestCase {
         let sutToPerformLoad = makeSUT()
         let launches = [LaunchItem(id: 1, name: "Launch", date: "Today")]
 
-        let saveExp = expectation(description: "Wait for save completion")
-        sutToPerformSave.save(launches) { saveError in
-            XCTAssertNil(saveError, "Expected to save launches successfully")
-            saveExp.fulfill()
-        }
-        wait(for: [saveExp], timeout: 1.0)
+        save(launches, with: sutToPerformSave)
 
         expect(sutToPerformLoad, toLoad: [LaunchItem(id: 1, name: "Launch", date: "Today")])
     }
@@ -49,19 +44,8 @@ class LaunchesCacheIntegrationTests: XCTestCase {
         let firstLaunches = [LaunchItem(id: 1, name: "Launch1", date: "Today")]
         let secondLaunches = [LaunchItem(id: 2, name: "Launch2", date: "Tomorrow")]
 
-        let firstSaveExp = expectation(description: "Wait for save completion")
-        sutToPerformFirstSave.save(firstLaunches) { saveError in
-            XCTAssertNil(saveError, "Expected to save launches successfully")
-            firstSaveExp.fulfill()
-        }
-        wait(for: [firstSaveExp], timeout: 1.0)
-
-        let secondSaveExp = expectation(description: "Wait for save completion")
-        sutToPerformSecondSave.save(secondLaunches) { saveError in
-            XCTAssertNil(saveError, "Expected to save launches successfully")
-            secondSaveExp.fulfill()
-        }
-        wait(for: [secondSaveExp], timeout: 1.0)
+        save(firstLaunches, with: sutToPerformFirstSave)
+        save(secondLaunches, with: sutToPerformSecondSave)
 
         expect(sutToPerformLoad, toLoad: secondLaunches)
     }
@@ -76,6 +60,15 @@ class LaunchesCacheIntegrationTests: XCTestCase {
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    private func save(_ launches: [LaunchItem], with sut: LocalLaunchLoader, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait for save completion")
+        sut.save(launches) { saveError in
+            XCTAssertNil(saveError, "Expected to save launches successfully")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
     }
 
     private func expect(_ sut: LocalLaunchLoader, toLoad expectedLaunches: [LaunchItem], file: StaticString = #file, line: UInt = #line) {
