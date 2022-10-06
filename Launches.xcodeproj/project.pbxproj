@@ -24,8 +24,6 @@
 		6E8654A728C552030050EE49 /* LaunchCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654A628C552030050EE49 /* LaunchCacheTestHelpers.swift */; };
 		6E8654A928C552C50050EE49 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654A828C552C50050EE49 /* SharedTestHelpers.swift */; };
 		6E8654AB28C62DE50050EE49 /* LaunchCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654AA28C62DE50050EE49 /* LaunchCachePolicy.swift */; };
-		6E8654AD28C68ACF0050EE49 /* CodableLaunchStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654AC28C68ACF0050EE49 /* CodableLaunchStoreTests.swift */; };
-		6E8654AF28C7ABF40050EE49 /* CodableLaunchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654AE28C7ABF40050EE49 /* CodableLaunchStore.swift */; };
 		6E8654B128C7DEB50050EE49 /* LaunchStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654B028C7DEB50050EE49 /* LaunchStoreSpecs.swift */; };
 		6E8654B328C7DF480050EE49 /* XCTestCase+LaunchStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654B228C7DF480050EE49 /* XCTestCase+LaunchStoreSpecs.swift */; };
 		6E8654B528C7F0650050EE49 /* XCTestCase+FailableDeleteLaunchSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8654B428C7F0650050EE49 /* XCTestCase+FailableDeleteLaunchSpecs.swift */; };
@@ -92,8 +90,6 @@
 		6E8654A628C552030050EE49 /* LaunchCacheTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCacheTestHelpers.swift; sourceTree = "<group>"; };
 		6E8654A828C552C50050EE49 /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		6E8654AA28C62DE50050EE49 /* LaunchCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LaunchCachePolicy.swift; path = Launches/LaunchCachePolicy.swift; sourceTree = SOURCE_ROOT; };
-		6E8654AC28C68ACF0050EE49 /* CodableLaunchStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableLaunchStoreTests.swift; sourceTree = "<group>"; };
-		6E8654AE28C7ABF40050EE49 /* CodableLaunchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableLaunchStore.swift; sourceTree = "<group>"; };
 		6E8654B028C7DEB50050EE49 /* LaunchStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchStoreSpecs.swift; sourceTree = "<group>"; };
 		6E8654B228C7DF480050EE49 /* XCTestCase+LaunchStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+LaunchStoreSpecs.swift"; sourceTree = "<group>"; };
 		6E8654B428C7F0650050EE49 /* XCTestCase+FailableDeleteLaunchSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailableDeleteLaunchSpecs.swift"; sourceTree = "<group>"; };
@@ -272,7 +268,6 @@
 				6E8654A428C54F320050EE49 /* ValidateLaunchCacheUseCaseTests.swift */,
 				6EAA136D28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift */,
 				6E86549F28C004B30050EE49 /* LoadLaunchFromCacheUseCaseTests.swift */,
-				6E8654AC28C68ACF0050EE49 /* CodableLaunchStoreTests.swift */,
 				6E8654B028C7DEB50050EE49 /* LaunchStoreSpecs.swift */,
 				6E8654B228C7DF480050EE49 /* XCTestCase+LaunchStoreSpecs.swift */,
 				6E8654B428C7F0650050EE49 /* XCTestCase+FailableDeleteLaunchSpecs.swift */,
@@ -286,18 +281,9 @@
 		6EC1649728EDEFC700D72C4E /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
-				6EC1649828EDEFD200D72C4E /* Codable */,
 				6EC1649928EDEFD700D72C4E /* CoreData */,
 			);
 			path = Infrastructure;
-			sourceTree = "<group>";
-		};
-		6EC1649828EDEFD200D72C4E /* Codable */ = {
-			isa = PBXGroup;
-			children = (
-				6E8654AE28C7ABF40050EE49 /* CodableLaunchStore.swift */,
-			);
-			path = Codable;
 			sourceTree = "<group>";
 		};
 		6EC1649928EDEFD700D72C4E /* CoreData */ = {
@@ -501,7 +487,6 @@
 				6EC1649228ECB41600D72C4E /* CoreDataLaunchStore.swift in Sources */,
 				6E8ED0E928B02A6900C734D4 /* HTTPClient.swift in Sources */,
 				6E86549828BE93700050EE49 /* LocalLaunchLoader.swift in Sources */,
-				6E8654AF28C7ABF40050EE49 /* CodableLaunchStore.swift in Sources */,
 				6E8654AB28C62DE50050EE49 /* LaunchCachePolicy.swift in Sources */,
 				6E8ED0E728B02A5900C734D4 /* RemoteLaunchLoader.swift in Sources */,
 				6E86549A28BE937B0050EE49 /* LaunchStore.swift in Sources */,
@@ -525,7 +510,6 @@
 				6E8654B528C7F0650050EE49 /* XCTestCase+FailableDeleteLaunchSpecs.swift in Sources */,
 				6E8654B728C8B8830050EE49 /* XCTestCase+FailableLaunchStoreSpecs.swift in Sources */,
 				6E8654A728C552030050EE49 /* LaunchCacheTestHelpers.swift in Sources */,
-				6E8654AD28C68ACF0050EE49 /* CodableLaunchStoreTests.swift in Sources */,
 				6E8654A228C005820050EE49 /* LaunchStoreSpy.swift in Sources */,
 				6EAA136E28BA3E3F00456388 /* CacheLaunchUseCaseTests.swift in Sources */,
 				6E8654B128C7DEB50050EE49 /* LaunchStoreSpecs.swift in Sources */,
