@@ -29,10 +29,25 @@ public final class RemoteLaunchLoader: LaunchLoader {
 
             switch result {
             case let .success(data, response):
-                completion(LaunchItemsMapper.map(data, from: response))
+                completion(RemoteLaunchLoader.map(data, from: response))
             case .failure:
                 completion(.failure(Error.connectivity))
             }
         }
+    }
+
+    private static func map(_ data: Data, from response:  HTTPURLResponse) -> Result {
+        do {
+            let items = try LaunchItemsMapper.map(data, from: response)
+            return .success(items.toModels())
+        } catch {
+            return .failure(error)
+        }
+    }
+}
+
+private extension Array where Element == RemoteLaunchItem {
+    func toModels() -> [LaunchItem] {
+        return map { LaunchItem(id: $0.id, name: $0.name, date: $0.date_str) }
     }
 }
