@@ -41,6 +41,31 @@ class LaunchesCacheIntegrationTests: XCTestCase {
         expect(sutToPerformLoad, toLoad: [LaunchItem(id: 1, name: "Launch", date: "Today")])
     }
 
+    func test_load_overridesItemsSavedOnASeparateInstance() {
+        let sutToPerformFirstSave = makeSUT()
+        let sutToPerformSecondSave = makeSUT()
+        let sutToPerformLoad = makeSUT()
+
+        let firstLaunches = [LaunchItem(id: 1, name: "Launch1", date: "Today")]
+        let secondLaunches = [LaunchItem(id: 2, name: "Launch2", date: "Tomorrow")]
+
+        let firstSaveExp = expectation(description: "Wait for save completion")
+        sutToPerformFirstSave.save(firstLaunches) { saveError in
+            XCTAssertNil(saveError, "Expected to save launches successfully")
+            firstSaveExp.fulfill()
+        }
+        wait(for: [firstSaveExp], timeout: 1.0)
+
+        let secondSaveExp = expectation(description: "Wait for save completion")
+        sutToPerformSecondSave.save(secondLaunches) { saveError in
+            XCTAssertNil(saveError, "Expected to save launches successfully")
+            secondSaveExp.fulfill()
+        }
+        wait(for: [secondSaveExp], timeout: 1.0)
+
+        expect(sutToPerformLoad, toLoad: secondLaunches)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> LocalLaunchLoader {
